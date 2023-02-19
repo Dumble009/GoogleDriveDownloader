@@ -1,2 +1,5 @@
 Packages/**
 !Packages/**/.gitkeep
+
+Credentials/**
+!Credentials/**/.gitkeep
