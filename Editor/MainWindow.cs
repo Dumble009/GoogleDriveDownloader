@@ -36,7 +36,17 @@ public class MainWindow : EditorWindow
 
         if (GUILayout.Button("Download"))
         {
-            Debug.Log(sheetID);
+            var loader = new SheetLoader();
+            var sheetData = loader.LoadSheetData(sheetID, 5);
+
+            ShowRowData(sheetData.GetRow("1"));
+            ShowRowData(sheetData.GetRow("2"));
+            ShowRowData(sheetData.GetRow("3"));
         }
+    }
+
+    private void ShowRowData(System.Collections.Generic.Dictionary<string, string> rowData)
+    {
+        Debug.Log($"NAME : {rowData["Name"]}, ATK : {rowData["ATK"]}, DEF : {rowData["DEF"]}, SPD : {rowData["SPD"]}, HP : {rowData["HP"]}");
     }
 }
