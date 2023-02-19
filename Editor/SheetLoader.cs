@@ -86,6 +86,8 @@ public class SheetLoader
             }
 
             retVal.SetRow(id, rowDic);
+
+            rowIdx++;
         }
 
         return retVal;
