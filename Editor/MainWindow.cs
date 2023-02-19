@@ -47,6 +47,6 @@ public class MainWindow : EditorWindow
 
     private void ShowRowData(System.Collections.Generic.Dictionary<string, string> rowData)
     {
-        Debug.Log($"NAME : {rowData["Name"]}, ATK : {rowData["ATK"]}, DEF : {rowData["DEF"]}, SPD : {rowData["SPD"]}, HP : {rowData["HP"]}");
+        Debug.Log($"NAME : {rowData["NAME"]}, ATK : {rowData["ATK"]}, DEF : {rowData["DEF"]}, SPD : {rowData["SPD"]}, HP : {rowData["HP"]}");
     }
 }
