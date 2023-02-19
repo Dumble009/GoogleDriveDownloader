@@ -80,7 +80,7 @@ public class SheetLoader
 
             // 1列目が空でなければ、他の列にもデータが存在するので、読み込む
             Dictionary<string, string> rowDic = new Dictionary<string, string>();
-            for (int i = 1; i <= parameterCount; i++)
+            for (int i = 0; i < parameterCount; i++)
             {
                 rowDic.Add((string)parameterNames[i], (string)rowData[i]);
             }
