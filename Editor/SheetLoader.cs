@@ -69,20 +69,22 @@ public class SheetLoader
                     .Values
                     .Get(sheetID, range);
             response = request.Execute();
-            var rowData = response.Values[0];
+            var values = response.Values;
 
-            var id = (string)rowData[0];
-            // 何行あるか分からないので、まずは1列目の値を読み込んで、それが空であれば中断する
-            if (id == "")
+            // 空の行を読み込んだ場合はValuesがnullになるので、それで全ての行を読み込んだかどうか判定
+            if (values == null)
             {
                 break;
             }
 
-            // 1列目が空でなければ、他の列にもデータが存在するので、読み込む
+            // 空でなかった場合は、データを読み込んでパースする。
+            var rowData = values[0];
+            var id = (string)rowData[0];
+
             Dictionary<string, string> rowDic = new Dictionary<string, string>();
             for (int i = 0; i < parameterCount; i++)
             {
-                rowDic.Add((string)parameterNames[i], (string)rowData[i]);
+                rowDic.Add((string)parameterNames[i], (string)rowData[i + 1]); // rowDataはA列から始まっているので、1個ずらす必要がある
             }
 
             retVal.SetRow(id, rowDic);
