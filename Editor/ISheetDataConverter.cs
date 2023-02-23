@@ -14,6 +14,7 @@ namespace GoogleDriveDownloader
         /// <returns>
         /// sheetDataを変換した結果得られたバイト配列。そのままファイルへ書き込んだりすることが出来る。
         /// 文字列に該当するバイト列の場合、その文字コードはUTF-8
+        /// エンディアンはリトルエンディアン
         /// </returns>
         List<byte> Convert(SheetData sheetData);
     }
