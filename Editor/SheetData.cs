@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace googleDriveDownloader
+namespace GoogleDriveDownloader
 {
     /// <summary>
     /// スプレッドシートから読み込まれたデータをパースしたもの

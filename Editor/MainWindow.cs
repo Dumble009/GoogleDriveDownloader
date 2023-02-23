@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-namespace googleDriveDownloader
+namespace GoogleDriveDownloader
 {
     /// <summary>
     /// GoogleDriveDownloaderのメイン画面

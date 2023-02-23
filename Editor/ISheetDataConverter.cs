@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace googleDriveDownloader
+namespace GoogleDriveDownloader
 {
     /// <summary>
     /// SheetDataオブジェクトを、JSONやCSV等のテキスト形式に変換する

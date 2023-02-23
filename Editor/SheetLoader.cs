@@ -7,7 +7,7 @@ using Google.Apis.Sheets.v4;
 
 using UnityEngine;
 
-namespace googleDriveDownloader
+namespace GoogleDriveDownloader
 {
     /// <summary>
     /// GoogleDriveからスプレッドシートを読み込んでディクショナリに変換するクラス

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using googleDriveDownloader;
+using GoogleDriveDownloader;
 
 /// <summary>
 /// SheetLoaderクラスの挙動を確認するためのテスト
