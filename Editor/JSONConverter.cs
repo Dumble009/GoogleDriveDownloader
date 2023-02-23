@@ -10,7 +10,15 @@ namespace GoogleDriveDownloader
     {
         public List<byte> Convert(SheetData sheetData)
         {
-            throw new System.NotImplementedException();
+            // SheetData内の辞書データを取り出してJSON文字列へ変換
+            var convertTarget = sheetData.Data;
+            var jsonString = JsonConvert.SerializeObject(convertTarget);
+
+            // 得られたJSON文字列をバイト列へ変換
+            var jsonBytes = System.Text.Encoding.UTF8.GetBytes(jsonString);
+
+            // 配列をListに変換して返却
+            return new List<byte>(jsonBytes);
         }
     }
 }
