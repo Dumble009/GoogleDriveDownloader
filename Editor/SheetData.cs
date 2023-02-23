@@ -7,11 +7,18 @@ namespace googleDriveDownloader
     /// </summary>
     public class SheetData
     {
+        Dictionary<string, Dictionary<string, string>> data;
         /// <summary>
         /// データの実体
         /// 1列目の値をキー、2列目以降の列名と値の辞書をバリューに持つ辞書
         /// </summary>
-        Dictionary<string, Dictionary<string, string>> data;
+        public Dictionary<string, Dictionary<string, string>> Data
+        {
+            get
+            {
+                return data;
+            }
+        }
 
         public SheetData()
         {
