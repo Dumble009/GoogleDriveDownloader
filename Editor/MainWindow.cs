@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using System.Collections.Generic;
 
 namespace googleDriveDownloader
 {
@@ -47,7 +48,7 @@ namespace googleDriveDownloader
             }
         }
 
-        private void ShowRowData(System.Collections.Generic.Dictionary<string, string> rowData)
+        private void ShowRowData(Dictionary<string, string> rowData)
         {
             Debug.Log($"NAME : {rowData["NAME"]}, ATK : {rowData["ATK"]}, DEF : {rowData["DEF"]}, SPD : {rowData["SPD"]}, HP : {rowData["HP"]}");
         }
