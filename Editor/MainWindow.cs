@@ -1,52 +1,55 @@
 using UnityEngine;
 using UnityEditor;
 
-/// <summary>
-/// GoogleDriveDownloaderのメイン画面
-/// </summary>
-public class MainWindow : EditorWindow
+namespace googleDriveDownloader
 {
     /// <summary>
-    /// ダウンロード対象のスプレッドシートのID
+    /// GoogleDriveDownloaderのメイン画面
     /// </summary>
-    string sheetID;
-
-    /// <summary>
-    /// ウインドウをオープンする
-    /// </summary>
-    [MenuItem("Window/GoogleDriveDownloader")]
-    public static void ShowWindow()
+    public class MainWindow : EditorWindow
     {
-        EditorWindow.GetWindow(typeof(MainWindow),
-                            false,
-                            "GoogleDriveDownloader",
-                            true
-                        );
-    }
+        /// <summary>
+        /// ダウンロード対象のスプレッドシートのID
+        /// </summary>
+        string sheetID;
 
-    /// <summary>
-    /// 各UIウィジェットを作成
-    /// </summary>
-    void OnGUI()
-    {
-        sheetID = EditorGUILayout.TextField(
-            "Sheet ID",
-            sheetID
-        );
-
-        if (GUILayout.Button("Download"))
+        /// <summary>
+        /// ウインドウをオープンする
+        /// </summary>
+        [MenuItem("Window/GoogleDriveDownloader")]
+        public static void ShowWindow()
         {
-            var loader = new SheetLoader();
-            var sheetData = loader.LoadSheetData(sheetID, 5);
-
-            ShowRowData(sheetData.GetRow("1"));
-            ShowRowData(sheetData.GetRow("2"));
-            ShowRowData(sheetData.GetRow("3"));
+            EditorWindow.GetWindow(typeof(MainWindow),
+                                false,
+                                "GoogleDriveDownloader",
+                                true
+                            );
         }
-    }
 
-    private void ShowRowData(System.Collections.Generic.Dictionary<string, string> rowData)
-    {
-        Debug.Log($"NAME : {rowData["NAME"]}, ATK : {rowData["ATK"]}, DEF : {rowData["DEF"]}, SPD : {rowData["SPD"]}, HP : {rowData["HP"]}");
+        /// <summary>
+        /// 各UIウィジェットを作成
+        /// </summary>
+        void OnGUI()
+        {
+            sheetID = EditorGUILayout.TextField(
+                "Sheet ID",
+                sheetID
+            );
+
+            if (GUILayout.Button("Download"))
+            {
+                var loader = new SheetLoader();
+                var sheetData = loader.LoadSheetData(sheetID, 5);
+
+                ShowRowData(sheetData.GetRow("1"));
+                ShowRowData(sheetData.GetRow("2"));
+                ShowRowData(sheetData.GetRow("3"));
+            }
+        }
+
+        private void ShowRowData(System.Collections.Generic.Dictionary<string, string> rowData)
+        {
+            Debug.Log($"NAME : {rowData["NAME"]}, ATK : {rowData["ATK"]}, DEF : {rowData["DEF"]}, SPD : {rowData["SPD"]}, HP : {rowData["HP"]}");
+        }
     }
 }
