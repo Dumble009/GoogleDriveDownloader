@@ -1,10 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 using googleDriveDownloader;
 
+/// <summary>
+/// SheetLoaderクラスの挙動を確認するためのテスト
+/// </summary>
 public class SheetLoaderTest
 {
     // ----------------------------------------------------------
