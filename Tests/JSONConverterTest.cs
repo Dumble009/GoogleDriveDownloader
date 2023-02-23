@@ -46,9 +46,12 @@ public class JSONConverterTest
 
         // originalDataをJSONに変換する。バイト列で返ってくるのでstringに変換する
         var bytes = jsonConverter.Convert(originalData);
-        var jsonString = Encoding.UTF8.GetString(bytes.ToArray());
 
         // 意味のある値が返ってきているか?
+        Assert.NotNull(bytes);
+
+        // バイト列を文字列へ戻す。
+        var jsonString = Encoding.UTF8.GetString(bytes.ToArray());
         Assert.NotNull(jsonString);
 
         // 返ってきた文字列を正しく戻すことが出来るか？
