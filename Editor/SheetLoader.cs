@@ -63,9 +63,9 @@ namespace GoogleDriveDownloader
                         .Get(sheetID, metaDataRange);
             var response = request.Execute();
             var parameterNames = response.Values[0]; // 1行分しか取得しないので、即座に0番のリストを返しておく
-            var parameterCount = parameterNames.Count;
+            var parameterCount = parameterNames.Count; // 空欄は無視されるので、1行目の要素の数がそのままパラメータの数になる
 
-            // 続いて2行目以降を読み込む。
+            // 続いて2行目以降(データ本体)を読み込む。
             int rowIdx = 2;
             while (true)
             {
