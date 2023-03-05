@@ -67,5 +67,16 @@ namespace GoogleDriveDownloader
                 throw new System.Exception("Loading Meta Sheet ID failed." + e.Message);
             }
         }
+
+        /// <summary>
+        /// Googleドライブからメタシートを読み込んで、SheetDataに変換する関数
+        /// </summary>
+        /// <returns>メタシートのSheetData</returns>
+        private SheetData LoadMetaSheetAsSheetData()
+        {
+            // Googleドライブからのシートの読み込みにはSheetLoaderを使用する
+            SheetLoader sheetLoader = new SheetLoader();
+            return sheetLoader.LoadSheetData(LoadMetaSheetID());
+        }
     }
 }
