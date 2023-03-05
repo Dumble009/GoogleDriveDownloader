@@ -56,7 +56,7 @@ namespace GoogleDriveDownloader
 
             // まずは1行目を読み込んで、パラメータ名を取得する。
             var colEdge = ColIdxToColName(COL_LIMIT);
-            var metaDataRange = $"Sheet1!B1:{colEdge}1"; // 1列目はIDで決まりなので2列目から取得する
+            var metaDataRange = $"B1:{colEdge}1"; // 1列目はIDで決まりなので2列目から取得する
             var request = sheetsService
                         .Spreadsheets
                         .Values
@@ -69,7 +69,7 @@ namespace GoogleDriveDownloader
             int rowIdx = 2;
             while (true)
             {
-                var range = $"Sheet1!A{rowIdx}:{colEdge}{rowIdx}";
+                var range = $"A{rowIdx}:{colEdge}{rowIdx}";
                 request = sheetsService
                         .Spreadsheets
                         .Values
