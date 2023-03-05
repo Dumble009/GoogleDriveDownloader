@@ -15,6 +15,11 @@ namespace GoogleDriveDownloader
     public class SheetLoader
     {
         /// <summary>
+        /// 列数の最大値
+        /// この列数よりも列の数が多いシートは正常に読み込むことが出来ない。
+        /// </summary>
+        const int COL_LIMIT = 1000;
+        /// <summary>
         /// Googleスプレッドシートの操作を提供するオブジェクト
         /// </summary>
         SheetsService sheetsService;
@@ -42,17 +47,15 @@ namespace GoogleDriveDownloader
         /// GoogleDrive上のスプレッドシートを読み込んで、パースして返す
         /// </summary>
         /// <param name="sheetID">読み込むスプレッドシートの、GoogleDrive上でのID</param>
-        /// <param name="parameterCount">1つの行を構成するパラメータの個数</param>
         /// <returns>スプレッドシートをパースしたSheetDataオブジェクト</returns>
         public SheetData LoadSheetData(
-            string sheetID,
-            int parameterCount
+            string sheetID
         )
         {
             SheetData retVal = new SheetData(); // 返り値
 
             // まずは1行目を読み込んで、パラメータ名を取得する。
-            var colEdge = ColIdxToColName(parameterCount);
+            var colEdge = ColIdxToColName(COL_LIMIT);
             var metaDataRange = $"Sheet1!B1:{colEdge}1"; // 1列目はIDで決まりなので2列目から取得する
             var request = sheetsService
                         .Spreadsheets
@@ -60,6 +63,7 @@ namespace GoogleDriveDownloader
                         .Get(sheetID, metaDataRange);
             var response = request.Execute();
             var parameterNames = response.Values[0]; // 1行分しか取得しないので、即座に0番のリストを返しておく
+            var parameterCount = parameterNames.Count;
 
             // 続いて2行目以降を読み込む。
             int rowIdx = 2;

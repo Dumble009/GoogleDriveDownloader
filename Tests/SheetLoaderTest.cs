@@ -71,10 +71,7 @@ public class SheetLoaderTest
                                 int parameterCount,
                                 List<List<(string, string)>> expectedSheet)
     {
-        var sheetData = sheetLoader.LoadSheetData(
-                    sheetID,
-                    parameterCount
-                );
+        var sheetData = sheetLoader.LoadSheetData(sheetID);
 
         // ちゃんと意味のある値は返ってきているか？
         Assert.NotNull(sheetData);
@@ -145,19 +142,5 @@ public class SheetLoaderTest
         var expectedData = CreateExpectedSheet(TEST_SHEET_DATA_COUNT, TEST_SHEET_PARAMETER_COUNT);
 
         LoadAndCheckSheet(TEST_SHEET_ID, TEST_SHEET_PARAMETER_COUNT, expectedData);
-    }
-
-    /// <summary>
-    /// シートの一部のデータのみを正しく読み込めるか確認するテスト
-    /// </summary>
-    [Test]
-    public void SheetLoaderTestLoadPartial()
-    {
-        int dataCount = TEST_SHEET_PARAMETER_COUNT / 2;
-        int parameterCount = TEST_SHEET_PARAMETER_COUNT / 2;
-
-        var expectedData = CreateExpectedSheet(dataCount, parameterCount);
-
-        LoadAndCheckSheet(TEST_SHEET_ID, parameterCount, expectedData);
     }
 }
