@@ -71,9 +71,8 @@ namespace GoogleDriveDownloader
                 {
                     string jsonString = file.ReadToEnd();
 
-                    var dic = JsonConvert.DeserializeObject
-                                <Dictionary<string, string>>
-                                (jsonString);
+                    var dic = JsonConvert
+                    .DeserializeObject<Dictionary<string, string>>(jsonString);
 
                     return dic[CONFIG_FILE_KEY_ID];
                 }

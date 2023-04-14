@@ -1,11 +1,6 @@
-using System.IO;
 using System.Collections.Generic;
 
-using Google.Apis.Auth.OAuth2;
-using Google.Apis.Services;
 using Google.Apis.Sheets.v4;
-
-using UnityEngine;
 
 namespace GoogleDriveDownloader
 {
@@ -25,22 +20,7 @@ namespace GoogleDriveDownloader
         SheetsService sheetsService;
         public SheetLoader()
         {
-            // 認証情報の読み込みと、認証処理
-            using var fileStream = new FileStream(
-                Application.dataPath + "/Scripts/GoogleDriveDownloader/Credentials/credentials.json",
-                FileMode.Open,
-                FileAccess.Read
-            );
-            var googleCredential = GoogleCredential
-                                    .FromStream(fileStream)
-                                    .CreateScoped(SheetsService.Scope.Spreadsheets);
-
-            sheetsService = new SheetsService(
-                new BaseClientService.Initializer()
-                {
-                    HttpClientInitializer = googleCredential
-                }
-            );
+            sheetsService = GoogleAuthAgent.CreateSheetsService();
         }
 
         /// <summary>
