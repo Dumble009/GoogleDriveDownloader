@@ -1,9 +1,5 @@
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 using GoogleDriveDownloader;
 
 public class SourceCodeLocatorTest
@@ -15,17 +11,19 @@ public class SourceCodeLocatorTest
     const string FILE_NAME = "SourceCodeLocatorTest.cs";
 
     /// <summary>
+    /// SourceCodeLocatorが返すパスを元に、
     /// このテストコードのパスを正しく計算する事が出来るか調べるテスト
     /// </summary>
     [Test]
     public void GetSourceCodePathTest()
     {
-        // このテストコードのファイルパスを取得し、ファイル名が正しいか、
-        // そのパスにちゃんとファイルが存在しているかを確認
-        var pathOfThisFile = SourceCodeLocator.GetSourceCodePath();
+        // SourceCodeLocatorは、このファイルが格納されているディレクトリのパスを
+        // 返してくれるので、ちゃんと存在するディレクトリを返してくれるか、
+        // そのディレクトリの中にこのファイルが格納されているかを確かめる
+        var pathOfParentDirectory = SourceCodeLocator.GetSourceCodePath();
+        Assert.True(Directory.Exists(pathOfParentDirectory));
 
-        var fileName = Path.GetFileName(pathOfThisFile);
-        Assert.AreEqual(fileName, FILE_NAME);
-        Assert.True(File.Exists(pathOfThisFile));
+        var thisFilePath = Path.Combine(pathOfParentDirectory, FILE_NAME);
+        Assert.True(File.Exists(thisFilePath));
     }
 }
