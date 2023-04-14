@@ -13,7 +13,7 @@ namespace GoogleDriveDownloader
         /// <summary>
         /// このソースコードのファイルから設定ファイルまでの相対パス
         /// </summary>
-        const string CONFIG_RELATIVE_PATH = "../Config/config.json";
+        const string CONFIG_RELATIVE_PATH = "../Config/Config.json";
 
         /// <summary>
         /// 設定ファイル中のID情報のキー
@@ -21,14 +21,9 @@ namespace GoogleDriveDownloader
         const string CONFIG_FILE_KEY_ID = "ID";
 
         /// <summary>
-        /// メタシートにおける、IDのパラメータ名
-        /// </summary>
-        const string META_SHEET_PARAMETER_NAME_ID = "ID";
-
-        /// <summary>
         /// メタシートにおける、シートIDのパラメータ名
         /// </summary>
-        const string META_SHEET_PARAMETER_NAME_SHEET_ID = "ShetID";
+        const string META_SHEET_PARAMETER_NAME_SHEET_ID = "SheetID";
 
         /// <summary>
         /// メタシートにおける、スプレッドシート内の参照シートの名前のパラメータ名
@@ -56,14 +51,9 @@ namespace GoogleDriveDownloader
         /// <returns>このソースコードのファイルパスを元に計算された設定ファイルのパス</returns>
         private string GetConfigPath()
         {
-            // スタックトレースからこのソースファイルのパスを取得する
-            var stackFrame = new StackFrame(true);
-            string sourceFilePath = stackFrame.GetFileName();
-
-
             // このソースコードが格納されているディレクトリのパスを取得し、
             // そこからの相対パスとして設定ファイルのパスを作成
-            string sourceDirPath = Path.GetDirectoryName(sourceFilePath);
+            string sourceDirPath = SourceCodeLocator.GetDirectoryOfSourceCodePath();
 
             return Path.Combine(sourceDirPath, CONFIG_RELATIVE_PATH);
         }
@@ -81,11 +71,10 @@ namespace GoogleDriveDownloader
                 {
                     string jsonString = file.ReadToEnd();
 
-                    var dic = JsonConvert.DeserializeObject
-                                <Dictionary<string, string>>
-                                (jsonString);
+                    var dic = JsonConvert
+                    .DeserializeObject<Dictionary<string, string>>(jsonString);
 
-                    return dic["ID"];
+                    return dic[CONFIG_FILE_KEY_ID];
                 }
             }
             catch (System.Exception e)
@@ -100,7 +89,6 @@ namespace GoogleDriveDownloader
         /// <returns>メタシートのSheetData</returns>
         private SheetData LoadMetaSheetAsSheetData()
         {
-            // Googleドライブからのシートの読み込みにはSheetLoaderを使用する
             SheetLoader sheetLoader = new SheetLoader();
             return sheetLoader.LoadSheetData(LoadMetaSheetID());
         }
@@ -120,7 +108,7 @@ namespace GoogleDriveDownloader
             {
                 var row = metaSheetDataDic[key];
 
-                int id = int.Parse(row[META_SHEET_PARAMETER_NAME_ID]);
+                int id = int.Parse(key);
                 string sheetID = row[META_SHEET_PARAMETER_NAME_SHEET_ID];
                 string sheetName = row[META_SHEET_PARAMETER_NAME_SHEET_NAME];
                 string savePath = row[META_SHEET_PARAMETER_NAME_SAVE_PATH];
@@ -137,7 +125,7 @@ namespace GoogleDriveDownloader
                 );
             }
 
-            return null;
+            return datas;
         }
     }
 }
