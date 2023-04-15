@@ -10,7 +10,7 @@ public class MockSourceCodeLocator : ISourceCodeLocator
     /// <summary>
     /// GetDirectoryOfSourceCodePathの返り値として返すパス
     /// </summary>
-    string ReturnPath
+    public string ReturnPath
     {
         get => returnPath;
     }
