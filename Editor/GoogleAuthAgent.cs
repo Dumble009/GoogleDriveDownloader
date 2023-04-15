@@ -7,7 +7,7 @@ using Google.Apis.Sheets.v4;
 namespace GoogleDriveDownloader
 {
     /// <summary>
-    /// GoogleAPIの認証処理を行う静的クラス
+    /// GoogleAPIの認証処理を行うクラス
     /// </summary>
     public class GoogleAuthAgent
     {
@@ -23,7 +23,7 @@ namespace GoogleDriveDownloader
         /// スプレッドシートにアクセスするサービスを提供してくれるオブジェクト
         /// アクセス権は読み取り専用
         /// </returns>
-        static public SheetsService CreateSheetsService()
+        public SheetsService CreateSheetsService()
         {
             // このサービスでは書き込み等は行わない予定なので、読み取り専用で認証を行う
             var googleCredential = CreateGoogleCredential(SheetsService.Scope.SpreadsheetsReadonly);
@@ -46,7 +46,7 @@ namespace GoogleDriveDownloader
         /// <returns>
         /// 指定されたスコープへのアクセス権を持つ認証オブジェクト。
         /// </returns>
-        static private GoogleCredential CreateGoogleCredential(
+        private GoogleCredential CreateGoogleCredential(
             params string[] scopes
         )
         {

@@ -13,7 +13,7 @@ public class GoogleAuthAgentTest
     [Test]
     public void CreateSheetsServiceTest()
     {
-        var sheetsService = GoogleAuthAgent.CreateSheetsService();
+        var sheetsService = new GoogleAuthAgent().CreateSheetsService();
 
         Assert.IsNotNull(sheetsService);
     }
