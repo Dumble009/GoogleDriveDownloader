@@ -12,7 +12,7 @@ public class MockSourceCodeLocator : ISourceCodeLocator
     /// </summary>
     public string ReturnPath
     {
-        get => returnPath;
+        set => returnPath = value;
     }
 
     public string GetDirectoryOfSourceCodePath()

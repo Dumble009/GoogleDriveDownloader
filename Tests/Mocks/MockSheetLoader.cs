@@ -12,7 +12,7 @@ public class MockSheetLoader : ISheetLoader
     /// </summary>
     public SheetData Sheet
     {
-        get => sheet;
+        set => sheet = value;
     }
 
     string lastPassedSheetID;
