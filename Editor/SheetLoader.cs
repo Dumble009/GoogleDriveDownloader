@@ -82,35 +82,19 @@ namespace GoogleDriveDownloader
         private string ColIdxToColName(int idx)
         {
             const int ALPHABET_COUNT = 26;
+            idx++;
             string colName = "";
 
-            // 1桁目は0=Aなので、個別で扱う
-            int mod = idx % ALPHABET_COUNT;
-            colName += (char)('A' + mod);
-
-            // 2桁目以降は1=Aになる
-            idx -= mod;
             while (idx > 0)
             {
-                idx /= ALPHABET_COUNT;
-                mod = idx % ALPHABET_COUNT;
+                int mod = (idx - 1) % ALPHABET_COUNT;
+                colName = (char)(mod + 'A') + colName;
 
-                // A=1...Z=26なのでmod = 0->Z
-                if (mod == 0)
-                {
-                    colName += 'Z';
-                }
-                else
-                {
-                    colName += (char)('A' + (mod - 1));
-                }
+                idx -= mod;
+                idx /= ALPHABET_COUNT;
             }
 
-            // 上の桁が文字列の末尾に来ているので、反転する
-            var charArray = colName.ToCharArray();
-            System.Array.Reverse(charArray);
-
-            return new string(charArray);
+            return colName;
         }
     }
 }
