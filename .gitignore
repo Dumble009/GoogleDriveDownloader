@@ -3,3 +3,5 @@ Packages/**
 
 Credentials/**
 !Credentials/**/.gitkeep
+
+Designs/*.drawio.bkp
