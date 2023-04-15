@@ -148,4 +148,32 @@ public class SheetLoaderTest
         AssertTable(table, target.LoadSheetData(SHEET_ID));
         Assert.AreEqual(SHEET_ID, spreadSheetsService.LastPassedSheetID);
     }
+
+    /// <summary>
+    /// 行数よりも列数の方が多いシートを読み込むテスト
+    /// </summary>
+    [Test]
+    public void LoadWideSheetTest()
+    {
+        var table = MakeTable(10, 100); // ここの数値は適当
+        spreadSheetsService.Table = table;
+
+        const string SHEET_ID = "wideSheet";
+        AssertTable(table, target.LoadSheetData(SHEET_ID));
+        Assert.AreEqual(SHEET_ID, spreadSheetsService.LastPassedSheetID);
+    }
+
+    /// <summary>
+    /// 列数よりも行数の方が多いシートを読み込むテスト
+    /// </summary>
+    [Test]
+    public void LoadLongSheetTest()
+    {
+        var table = MakeTable(100, 10);
+        spreadSheetsService.Table = table;
+
+        const string SHEET_ID = "longSheet";
+        AssertTable(table, target.LoadSheetData(SHEET_ID));
+        Assert.AreEqual(SHEET_ID, spreadSheetsService.LastPassedSheetID);
+    }
 }
