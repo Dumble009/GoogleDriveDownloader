@@ -16,7 +16,10 @@ namespace GoogleDriveDownloader
 
         public SpreadSheetsService()
         {
-            sheetsService = new GoogleAuthAgent().CreateSheetsService();
+            sheetsService = new GoogleAuthAgent(
+                new SourceCodeLocator()
+            )
+            .CreateSheetsService();
         }
 
         public IList<IList<object>> Get(string sheetID, string range)

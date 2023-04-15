@@ -17,6 +17,17 @@ namespace GoogleDriveDownloader
         private const string RELATIVE_PATH_TO_CREADENTIAL = "../Credentials/credentials.json";
 
         /// <summary>
+        /// クレデンシャルファイルのパスを計算するために使用する、
+        /// このソースコードが格納されているパスを計算してくれるオブジェクト
+        /// </summary>
+        ISourceCodeLocator sourceCodeLocator;
+
+        public GoogleAuthAgent(ISourceCodeLocator _sourceCodeLocator)
+        {
+            sourceCodeLocator = _sourceCodeLocator;
+        }
+
+        /// <summary>
         /// 認証処理を行い、スプレッドシートのサービスを提供するオブジェクトを作成して返す
         /// </summary>
         /// <returns>
@@ -51,7 +62,7 @@ namespace GoogleDriveDownloader
         )
         {
             // クレデンシャルファイルのパスを計算
-            var thisDirectoryPath = new SourceCodeLocator()
+            var thisDirectoryPath = sourceCodeLocator
                                     .GetDirectoryOfSourceCodePath();
             var credentialPath = Path.Combine(thisDirectoryPath, RELATIVE_PATH_TO_CREADENTIAL);
 

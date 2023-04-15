@@ -20,7 +20,10 @@ namespace GoogleDriveDownloader
         SheetsService sheetsService;
         public SheetLoader()
         {
-            sheetsService = new GoogleAuthAgent().CreateSheetsService();
+            sheetsService = new GoogleAuthAgent(
+                new SourceCodeLocator()
+            )
+            .CreateSheetsService();
         }
 
         /// <summary>
