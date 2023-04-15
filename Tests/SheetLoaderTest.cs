@@ -64,27 +64,51 @@ public class SheetLoaderTest
     }
 
     /// <summary>
-    /// 列名の行を含めて、3x3サイズのテーブルを正しく読み込めるかどうか
+    /// シートデータの代わりとなるリストを作成する
+    /// </summary>
+    /// <param name="rowCount">
+    /// シートの行数。列名が記載された1行目を含む
+    /// </param>
+    /// <param name="colCount">
+    /// シートの列数。IDが記載された1列目を含む
+    /// </param>
+    /// <returns></returns>
+    private List<List<string>> MakeTable(
+        int rowCount,
+        int colCount
+    )
+    {
+        var table = new List<List<string>>();
+
+        // 1行目にはパラメータ名が書かれる
+        table.Add(new List<string>(colCount));
+        table[0].Add(COL_NAME_ID);
+        for (int i = 1; i < colCount; i++)
+        {
+            table[0].Add("PARAM_" + i.ToString());
+        }
+
+        // テーブル本体の作成
+        for (int i = 1; i < rowCount; i++)
+        {
+            table.Add(new List<string>(colCount));
+            table[i].Add("ID_" + i.ToString());
+            for (int j = 1; j < colCount; j++)
+            {
+                table[i].Add(i.ToString() + "_" + j.ToString());
+            }
+        }
+
+        return table;
+    }
+
+    /// <summary>
+    /// 列名の行を含めて、3x3サイズのシートを正しく読み込めるかどうか
     /// </summary>
     [Test]
     public void LoadTest3x3()
     {
-        var table = new List<List<string>>();
-
-        // 1行目にはパラメータ名が書かれる。1列目は必ず"ID"
-        table.Add(new List<string>(){
-            COL_NAME_ID, "PARAM1", "PARAM2"
-        });
-
-        // テーブル本体の作成
-        table.Add(new List<string>()
-        {
-            "1", "1_1", "2_1"
-        });
-        table.Add(new List<string>()
-        {
-            "2", "2_1", "2_2"
-        });
+        var table = MakeTable(3, 3);
         spreadSheetsService.Table = table;
 
         const string SHEET_ID = "sheet3x3";
@@ -93,37 +117,34 @@ public class SheetLoaderTest
     }
 
     /// <summary>
-    /// 列名の行を含めて、1000x1000サイズのテーブルを読み込めるか調べるテスト
+    /// 列名の行を含めて、1000x1000サイズのシートを読み込めるか調べるテスト
     /// 1000はこのツールにおける列数の限界値
+    /// 行数には限界値が無いが、ここでは1000としておく
     /// </summary>
     [Test]
-    public void LoadTest1000x1000()
+    public void LoadTestMaximum()
     {
         const int ROW_COUNT = 1000;
         const int COL_COUNT = 1000;
-        var table = new List<List<string>>();
-
-        // 1行目にはパラメータ名が書かれる
-        table.Add(new List<string>(COL_COUNT));
-        table[0].Add(COL_NAME_ID);
-        for (int i = 1; i < COL_COUNT; i++)
-        {
-            table[0].Add("PARAM_" + i.ToString());
-        }
-
-        // テーブル本体の作成
-        for (int i = 1; i < ROW_COUNT; i++)
-        {
-            table.Add(new List<string>(COL_COUNT));
-            table[i].Add("ID_" + i.ToString());
-            for (int j = 1; j < COL_COUNT; j++)
-            {
-                table[i].Add(i.ToString() + "_" + j.ToString());
-            }
-        }
+        var table = MakeTable(ROW_COUNT, COL_COUNT);
         spreadSheetsService.Table = table;
 
         const string SHEET_ID = "sheet1000x1000";
+        AssertTable(table, target.LoadSheetData(SHEET_ID));
+        Assert.AreEqual(SHEET_ID, spreadSheetsService.LastPassedSheetID);
+    }
+
+    /// <summary>
+    /// 最小サイズのシートを読み込むテスト
+    /// 最小サイズは2x2(1行目は必ず列名があり、1列目は必ずIDがあるため)
+    /// </summary>
+    [Test]
+    public void LoadTestMinimum()
+    {
+        var table = MakeTable(2, 2);
+        spreadSheetsService.Table = table;
+
+        const string SHEET_ID = "sheet2x2";
         AssertTable(table, target.LoadSheetData(SHEET_ID));
         Assert.AreEqual(SHEET_ID, spreadSheetsService.LastPassedSheetID);
     }
