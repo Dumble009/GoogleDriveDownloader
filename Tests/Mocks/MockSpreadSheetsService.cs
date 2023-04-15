@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using GoogleDriveDownloader;
 
+/// <summary>
+/// ISpreadSheetsServiceインタフェースのモッククラス
+/// 事前に渡された2次元リストをシートに見立て、要求に従って範囲データを計算して返す
+/// </summary>
 public class MockSpreadSheetsService : ISpreadSheetsService
 {
     List<List<string>> table;
