@@ -4,17 +4,10 @@ using System.Diagnostics;
 namespace GoogleDriveDownloader
 {
     /// <summary>
-    /// ソースコードのファイルパスを計算して返す機能を提供する静的クラス
+    /// ソースコードのファイルパスを計算して返す機能を提供するクラス
     /// </summary>
-    public class SourceCodeLocator
+    public class SourceCodeLocator : ISourceCodeLocator
     {
-        /// <summary>
-        /// このメソッドを呼び出したクラスが格納されているディレクトリのパスを返す。
-        /// </summary>
-        /// <returns>
-        /// このメソッドを呼び出したクラスのファイルが格納されているディレクトリのパス。
-        /// 絶対パスか相対パスかは保証されない。
-        /// </returns>
         public string GetDirectoryOfSourceCodePath()
         {
             // スタックトレースを使用して、呼び出し元のファイルパスを取得する
