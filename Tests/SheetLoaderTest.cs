@@ -41,7 +41,7 @@ public class SheetLoaderTest
         // メタシートに対して読み込みテストを行う。
         // メタシートの中身までは保証できないので、中身の確認は行わない。
 
-        var thisDirectoryPath = SourceCodeLocator.GetDirectoryOfSourceCodePath();
+        var thisDirectoryPath = new SourceCodeLocator().GetDirectoryOfSourceCodePath();
         var configFilePath = Path.Combine(thisDirectoryPath, RELATIVE_CONFIG_PATH);
         var fileContent = File.ReadAllText(configFilePath);
         var configContent = JsonConvert

@@ -15,7 +15,7 @@ namespace GoogleDriveDownloader
         /// このメソッドを呼び出したクラスのファイルが格納されているディレクトリのパス。
         /// 絶対パスか相対パスかは保証されない。
         /// </returns>
-        public static string GetDirectoryOfSourceCodePath()
+        public string GetDirectoryOfSourceCodePath()
         {
             // スタックトレースを使用して、呼び出し元のファイルパスを取得する
             var callerFileName = new StackTrace(true)

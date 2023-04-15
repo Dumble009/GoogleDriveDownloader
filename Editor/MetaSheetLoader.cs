@@ -53,7 +53,7 @@ namespace GoogleDriveDownloader
         {
             // このソースコードが格納されているディレクトリのパスを取得し、
             // そこからの相対パスとして設定ファイルのパスを作成
-            string sourceDirPath = SourceCodeLocator.GetDirectoryOfSourceCodePath();
+            string sourceDirPath = new SourceCodeLocator().GetDirectoryOfSourceCodePath();
 
             return Path.Combine(sourceDirPath, CONFIG_RELATIVE_PATH);
         }

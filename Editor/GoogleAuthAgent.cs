@@ -51,7 +51,7 @@ namespace GoogleDriveDownloader
         )
         {
             // クレデンシャルファイルのパスを計算
-            var thisDirectoryPath = SourceCodeLocator
+            var thisDirectoryPath = new SourceCodeLocator()
                                     .GetDirectoryOfSourceCodePath();
             var credentialPath = Path.Combine(thisDirectoryPath, RELATIVE_PATH_TO_CREADENTIAL);
 
