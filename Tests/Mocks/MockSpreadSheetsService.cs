@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using GoogleDriveDownloader;
 
 public class MockSpreadSheetsService : ISpreadSheetsService
@@ -73,12 +74,29 @@ public class MockSpreadSheetsService : ISpreadSheetsService
         var retVal = new List<IList<object>>();
         for (int i = startRowIdx; i <= endRowIdx; i++)
         {
+            if (i >= table.Count)
+            {
+                break;
+            }
+
             var currentRow = new List<object>();
             for (int j = startColIdx; j <= endColIdx; j++)
             {
+                if (j >= table[i].Count)
+                {
+                    break;
+                }
+
                 currentRow.Add(table[i][j]);
             }
             retVal.Add(currentRow);
+        }
+
+        // 1行も返り値に含まれない場合は、GoogleAPIの仕様に則って
+        // nullを返す
+        if (retVal.Count == 0)
+        {
+            return null;
         }
 
         return retVal;
