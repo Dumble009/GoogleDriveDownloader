@@ -35,12 +35,13 @@ namespace GoogleDriveDownloader
             SheetData retVal = new SheetData(); // 返り値
 
             // まずは1行目を読み込んで、パラメータ名を取得する。
-            var colEdge = ColIdxToColName(COL_LIMIT);
-            var metaDataRange = $"B1:{colEdge}1"; // 1列目はIDで決まりなので2列目から取得する
+            var limitColName = ColIdxToColName(COL_LIMIT);
+            var metaDataRange = $"B1:{limitColName}1"; // 1列目はIDで決まりなので2列目から取得する
             var values = sheetsService.Get(sheetID, metaDataRange);
 
             var parameterNames = values[0]; // リストのリストになっているおり、0番目の要素が1行目を表している
             var parameterCount = parameterNames.Count; // 空欄は無視されるので、1行目の要素の数がそのままパラメータの数になる
+            var colEdge = ColIdxToColName(parameterCount);
 
             // 続いて2行目以降(データ本体)を読み込む。
             int rowIdx = 2;
@@ -85,7 +86,7 @@ namespace GoogleDriveDownloader
 
             // 1桁目は0=Aなので、個別で扱う
             int mod = idx % ALPHABET_COUNT;
-            colName += 'A' + mod;
+            colName += (char)('A' + mod);
 
             // 2桁目以降は1=Aになる
             idx -= mod;
@@ -101,7 +102,7 @@ namespace GoogleDriveDownloader
                 }
                 else
                 {
-                    colName += 'A' + (mod - 1);
+                    colName += (char)('A' + (mod - 1));
                 }
             }
 

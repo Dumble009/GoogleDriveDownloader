@@ -70,31 +70,58 @@ public class SheetLoaderTest
         var table = new List<List<string>>();
 
         // 1行目にはパラメータ名が書かれる。1列目は必ず"ID"
-        const string COL_NAME_PARAM1 = "PARAM1";
-        const string COL_NAME_PARAM2 = "PARAM2";
         table.Add(new List<string>(){
-            COL_NAME_ID, COL_NAME_PARAM1, COL_NAME_PARAM2
+            COL_NAME_ID, "PARAM1", "PARAM2"
         });
 
         // テーブル本体の作成
-        const string ID1 = "1";
-        const string ID2 = "2";
-        const string PARAM1_1 = "1_1";
-        const string PARAM2_1 = "2_1";
-        const string PARAM1_2 = "1_2";
-        const string PARAM2_2 = "2_2";
-
         table.Add(new List<string>()
         {
-            ID1, PARAM1_1, PARAM2_1
+            "1", "1_1", "2_1"
         });
         table.Add(new List<string>()
         {
-            ID2, PARAM1_2, PARAM2_2
+            "2", "2_1", "2_2"
         });
         spreadSheetsService.Table = table;
 
-        const string SHEET_ID = "sheet1";
+        const string SHEET_ID = "sheet3x3";
+        AssertTable(table, target.LoadSheetData(SHEET_ID));
+        Assert.AreEqual(SHEET_ID, spreadSheetsService.LastPassedSheetID);
+    }
+
+    /// <summary>
+    /// 列名の行を含めて、1000x1000サイズのテーブルを読み込めるか調べるテスト
+    /// 1000はこのツールにおける列数の限界値
+    /// </summary>
+    [Test]
+    public void LoadTest1000x1000()
+    {
+        const int ROW_COUNT = 1000;
+        const int COL_COUNT = 1000;
+        var table = new List<List<string>>();
+
+        // 1行目にはパラメータ名が書かれる
+        table.Add(new List<string>(COL_COUNT));
+        table[0].Add(COL_NAME_ID);
+        for (int i = 1; i < COL_COUNT; i++)
+        {
+            table[0].Add("PARAM_" + i.ToString());
+        }
+
+        // テーブル本体の作成
+        for (int i = 1; i < ROW_COUNT; i++)
+        {
+            table.Add(new List<string>(COL_COUNT));
+            table[i].Add("ID_" + i.ToString());
+            for (int j = 1; j < COL_COUNT; j++)
+            {
+                table[i].Add(i.ToString() + "_" + j.ToString());
+            }
+        }
+        spreadSheetsService.Table = table;
+
+        const string SHEET_ID = "sheet1000x1000";
         AssertTable(table, target.LoadSheetData(SHEET_ID));
         Assert.AreEqual(SHEET_ID, spreadSheetsService.LastPassedSheetID);
     }

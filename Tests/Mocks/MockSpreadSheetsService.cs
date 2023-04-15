@@ -23,6 +23,8 @@ public class MockSpreadSheetsService : ISpreadSheetsService
 
     public IList<IList<object>> Get(string sheetID, string range)
     {
+        lastPassedSheetID = sheetID;
+
         // まずrangeの文字列を分解し、開始列・行、終了列・行を示す文字列に分解する
         string startColStr = "", startRowStr = "", endColStr = "", endRowStr = "";
 
