@@ -48,11 +48,13 @@ public class SheetLoaderTest
         int colCount = table[0].Count;
         var colNames = table[0];
 
+        Assert.AreEqual(rowCount - 1, sheetData.Data.Count); // 1行目は列名が書かれており、SheetDataには含まれないので、行数が1つ減る
         for (int i = 1; i < rowCount; i++)
         {
             var sheetRow = sheetData.GetRow(
                 table[i][0]
             );
+            Assert.AreEqual(colCount - 1, sheetRow.Count); // 1列目のIDはSheetDataではキーとして扱われるので、列数が1つ減る
             for (int j = 1; j < colCount; j++)
             {
                 var colName = colNames[j];
