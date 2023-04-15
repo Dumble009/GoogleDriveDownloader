@@ -17,7 +17,12 @@ public class MetaSheetLoaderTest
     [SetUp]
     public void Setup()
     {
-        metaSheetLoader = new MetaSheetLoader();
+        metaSheetLoader = new MetaSheetLoader(
+            new SheetLoader(
+                new SpreadSheetsService()
+            ),
+            new SourceCodeLocator()
+        );
     }
 
     /// <summary>

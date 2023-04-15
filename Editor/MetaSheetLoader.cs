@@ -1,5 +1,4 @@
 using System.IO;
-using System.Diagnostics;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -40,9 +39,23 @@ namespace GoogleDriveDownloader
         /// </summary>
         const string META_SHEET_PARAMETER_NAME_DISPLAY_NAME = "DisplayName";
 
-        public MetaSheetLoader()
-        {
+        /// <summary>
+        /// スプレッドシートを読み込み変換する処理を行うオブジェクト
+        /// </summary>
+        ISheetLoader sheetLoader;
 
+        /// <summary>
+        /// このコードが書かれているファイルのパスを計算するオブジェクト
+        /// </summary>
+        ISourceCodeLocator sourceCodeLocator;
+
+        public MetaSheetLoader(
+            ISheetLoader _sheetLoader,
+            ISourceCodeLocator _sourceCodeLocator
+        )
+        {
+            sheetLoader = _sheetLoader;
+            sourceCodeLocator = _sourceCodeLocator;
         }
 
         /// <summary>
@@ -53,7 +66,7 @@ namespace GoogleDriveDownloader
         {
             // このソースコードが格納されているディレクトリのパスを取得し、
             // そこからの相対パスとして設定ファイルのパスを作成
-            string sourceDirPath = new SourceCodeLocator().GetDirectoryOfSourceCodePath();
+            string sourceDirPath = sourceCodeLocator.GetDirectoryOfSourceCodePath();
 
             return Path.Combine(sourceDirPath, CONFIG_RELATIVE_PATH);
         }
@@ -84,18 +97,6 @@ namespace GoogleDriveDownloader
         }
 
         /// <summary>
-        /// Googleドライブからメタシートを読み込んで、SheetDataに変換する関数
-        /// </summary>
-        /// <returns>メタシートのSheetData</returns>
-        private SheetData LoadMetaSheetAsSheetData()
-        {
-            SheetLoader sheetLoader = new SheetLoader(
-                new SpreadSheetsService()
-            );
-            return sheetLoader.LoadSheetData(LoadMetaSheetID());
-        }
-
-        /// <summary>
         /// メタシートを読み込んで、各行のデータを要素に持つリストを返す
         /// </summary>
         /// <returns>各行のデータを1つの要素として持つリスト</returns>
@@ -104,7 +105,9 @@ namespace GoogleDriveDownloader
             List<MetaSheetData> datas = new List<MetaSheetData>();
 
             // メタシートを読み込んだ結果を辞書として貰い、イテレートする
-            var metaSheetDataDic = LoadMetaSheetAsSheetData().Data;
+            var metaSheetDataDic = sheetLoader
+            .LoadSheetData(LoadMetaSheetID())
+            .Data;
 
             foreach (var key in metaSheetDataDic.Keys)
             {
