@@ -5,7 +5,7 @@ namespace GoogleDriveDownloader
     /// <summary>
     /// GoogleDriveからスプレッドシートを読み込んでディクショナリに変換するクラス
     /// </summary>
-    public class SheetLoader
+    public class SheetLoader : ISheetLoader
     {
         /// <summary>
         /// 列数の最大値
@@ -22,12 +22,6 @@ namespace GoogleDriveDownloader
         {
             sheetsService = _sheetsService;
         }
-
-        /// <summary>
-        /// GoogleDrive上のスプレッドシートを読み込んで、パースして返す
-        /// </summary>
-        /// <param name="sheetID">読み込むスプレッドシートの、GoogleDrive上でのID</param>
-        /// <returns>スプレッドシートをパースしたSheetDataオブジェクト</returns>
         public SheetData LoadSheetData(
             string sheetID
         )
