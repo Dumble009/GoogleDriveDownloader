@@ -89,7 +89,9 @@ namespace GoogleDriveDownloader
         /// <returns>メタシートのSheetData</returns>
         private SheetData LoadMetaSheetAsSheetData()
         {
-            SheetLoader sheetLoader = new SheetLoader();
+            SheetLoader sheetLoader = new SheetLoader(
+                new SpreadSheetsService()
+            );
             return sheetLoader.LoadSheetData(LoadMetaSheetID());
         }
 

@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 
-using Google.Apis.Sheets.v4;
-
 namespace GoogleDriveDownloader
 {
     /// <summary>
@@ -14,16 +12,15 @@ namespace GoogleDriveDownloader
         /// この列数よりも列の数が多いシートは正常に読み込むことが出来ない。
         /// </summary>
         const int COL_LIMIT = 1000;
+
         /// <summary>
-        /// Googleスプレッドシートの操作を提供するオブジェクト
+        /// スプレッドシートへのアクセスを提供するオブジェクト
         /// </summary>
-        SheetsService sheetsService;
-        public SheetLoader()
+        ISpreadSheetsService sheetsService;
+
+        public SheetLoader(ISpreadSheetsService _sheetsService)
         {
-            sheetsService = new GoogleAuthAgent(
-                new SourceCodeLocator()
-            )
-            .CreateSheetsService();
+            sheetsService = _sheetsService;
         }
 
         /// <summary>
@@ -40,12 +37,9 @@ namespace GoogleDriveDownloader
             // まずは1行目を読み込んで、パラメータ名を取得する。
             var colEdge = ColIdxToColName(COL_LIMIT);
             var metaDataRange = $"B1:{colEdge}1"; // 1列目はIDで決まりなので2列目から取得する
-            var request = sheetsService
-                        .Spreadsheets
-                        .Values
-                        .Get(sheetID, metaDataRange);
-            var response = request.Execute();
-            var parameterNames = response.Values[0]; // 1行分しか取得しないので、即座に0番のリストを返しておく
+            var values = sheetsService.Get(sheetID, metaDataRange);
+
+            var parameterNames = values[0]; // リストのリストになっているおり、0番目の要素が1行目を表している
             var parameterCount = parameterNames.Count; // 空欄は無視されるので、1行目の要素の数がそのままパラメータの数になる
 
             // 続いて2行目以降(データ本体)を読み込む。
@@ -53,12 +47,7 @@ namespace GoogleDriveDownloader
             while (true)
             {
                 var range = $"A{rowIdx}:{colEdge}{rowIdx}";
-                request = sheetsService
-                        .Spreadsheets
-                        .Values
-                        .Get(sheetID, range);
-                response = request.Execute();
-                var values = response.Values;
+                values = sheetsService.Get(sheetID, range);
 
                 // 空の行を読み込んだ場合はValuesがnullになるので、それで全ての行を読み込んだかどうか判定
                 if (values == null)

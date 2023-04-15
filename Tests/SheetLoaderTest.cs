@@ -28,7 +28,9 @@ public class SheetLoaderTest
     [SetUp]
     public void Setup()
     {
-        sheetLoader = new SheetLoader();
+        sheetLoader = new SheetLoader(
+            new SpreadSheetsService()
+        );
     }
 
     /// <summary>
