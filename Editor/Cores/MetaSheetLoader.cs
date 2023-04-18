@@ -12,7 +12,7 @@ namespace GoogleDriveDownloader
         /// <summary>
         /// このソースコードのファイルから設定ファイルまでの相対パス
         /// </summary>
-        const string CONFIG_RELATIVE_PATH = "../Config/Config.json";
+        const string CONFIG_RELATIVE_PATH = "../../Config/Config.json";
 
         /// <summary>
         /// 設定ファイル中のID情報のキー
