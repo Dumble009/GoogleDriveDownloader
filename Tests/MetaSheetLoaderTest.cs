@@ -141,7 +141,7 @@ public class MetaSheetLoaderTest
     }
 
     /// <summary>
-    /// 列名を除き、一つだけのデータを持つメタデータを読み込むテスト
+    /// 列名を除き、一つだけのデータを持つメタシートを読み込むテスト
     /// </summary>
     [Test]
     public void LoadSingleMetaData()
@@ -150,7 +150,7 @@ public class MetaSheetLoaderTest
     }
 
     /// <summary>
-    /// 複数のデータを持つメタデータを読み込むテスト
+    /// 複数のデータを持つメタシートを読み込むテスト
     /// </summary>
     [Test]
     public void LoadMultiMetaData()
