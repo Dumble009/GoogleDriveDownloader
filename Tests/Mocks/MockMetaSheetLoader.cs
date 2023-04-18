@@ -3,6 +3,7 @@ using GoogleDriveDownloader;
 
 /// <summary>
 /// IMetaSheetLoaderインタフェースのモッククラス
+/// 事前に渡されたMetaSheetDataのリストをLoadMetaSheetで返す
 /// </summary>
 public class MockMetaSheetLoader : IMetaSheetLoader
 {
