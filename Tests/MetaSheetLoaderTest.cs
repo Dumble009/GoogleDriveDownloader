@@ -19,7 +19,7 @@ public class MetaSheetLoaderTest
     /// このファイルからダミーのコンフィグファイルが格納されている
     /// ディレクトリまでの相対パス
     /// </summary>
-    const string DUMMY_CONFIG_RELATIVE_PATH = "DummyResources/Config";
+    const string DUMMY_CONFIG_RELATIVE_PATH = "DummyResources/Config/DummyFolder";
 
     /// <summary>
     /// メタシートにおける、シートIDのパラメータ名

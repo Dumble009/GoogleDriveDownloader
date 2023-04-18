@@ -14,7 +14,7 @@ namespace GoogleDriveDownloader
         /// <summary>
         /// このファイルからクレデンシャルファイルまでの相対パス
         /// </summary>
-        private const string RELATIVE_PATH_TO_CREADENTIAL = "../Credentials/credentials.json";
+        private const string RELATIVE_PATH_TO_CREADENTIAL = "../../Credentials/credentials.json";
 
         /// <summary>
         /// クレデンシャルファイルのパスを計算するために使用する、
