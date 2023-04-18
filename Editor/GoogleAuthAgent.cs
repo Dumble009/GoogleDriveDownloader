@@ -7,7 +7,7 @@ using Google.Apis.Sheets.v4;
 namespace GoogleDriveDownloader
 {
     /// <summary>
-    /// GoogleAPIの認証処理を行う静的クラス
+    /// GoogleAPIの認証処理を行うクラス
     /// </summary>
     public class GoogleAuthAgent
     {
@@ -17,13 +17,24 @@ namespace GoogleDriveDownloader
         private const string RELATIVE_PATH_TO_CREADENTIAL = "../Credentials/credentials.json";
 
         /// <summary>
+        /// クレデンシャルファイルのパスを計算するために使用する、
+        /// このソースコードが格納されているパスを計算してくれるオブジェクト
+        /// </summary>
+        ISourceCodeLocator sourceCodeLocator;
+
+        public GoogleAuthAgent(ISourceCodeLocator _sourceCodeLocator)
+        {
+            sourceCodeLocator = _sourceCodeLocator;
+        }
+
+        /// <summary>
         /// 認証処理を行い、スプレッドシートのサービスを提供するオブジェクトを作成して返す
         /// </summary>
         /// <returns>
         /// スプレッドシートにアクセスするサービスを提供してくれるオブジェクト
         /// アクセス権は読み取り専用
         /// </returns>
-        static public SheetsService CreateSheetsService()
+        public SheetsService CreateSheetsService()
         {
             // このサービスでは書き込み等は行わない予定なので、読み取り専用で認証を行う
             var googleCredential = CreateGoogleCredential(SheetsService.Scope.SpreadsheetsReadonly);
@@ -46,12 +57,12 @@ namespace GoogleDriveDownloader
         /// <returns>
         /// 指定されたスコープへのアクセス権を持つ認証オブジェクト。
         /// </returns>
-        static private GoogleCredential CreateGoogleCredential(
+        private GoogleCredential CreateGoogleCredential(
             params string[] scopes
         )
         {
             // クレデンシャルファイルのパスを計算
-            var thisDirectoryPath = SourceCodeLocator
+            var thisDirectoryPath = sourceCodeLocator
                                     .GetDirectoryOfSourceCodePath();
             var credentialPath = Path.Combine(thisDirectoryPath, RELATIVE_PATH_TO_CREADENTIAL);
 

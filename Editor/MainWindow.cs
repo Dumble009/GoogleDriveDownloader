@@ -55,7 +55,9 @@ namespace GoogleDriveDownloader
 
             if (GUILayout.Button("Download"))
             {
-                var loader = new SheetLoader();
+                var loader = new SheetLoader(
+                    new SpreadSheetsService()
+                );
                 var sheetData = loader.LoadSheetData(sheetID);
 
                 ShowRowData(sheetData.GetRow("1"));

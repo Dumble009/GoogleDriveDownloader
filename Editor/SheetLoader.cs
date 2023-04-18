@@ -1,33 +1,27 @@
 using System.Collections.Generic;
 
-using Google.Apis.Sheets.v4;
-
 namespace GoogleDriveDownloader
 {
     /// <summary>
     /// GoogleDriveからスプレッドシートを読み込んでディクショナリに変換するクラス
     /// </summary>
-    public class SheetLoader
+    public class SheetLoader : ISheetLoader
     {
         /// <summary>
         /// 列数の最大値
         /// この列数よりも列の数が多いシートは正常に読み込むことが出来ない。
         /// </summary>
         const int COL_LIMIT = 1000;
-        /// <summary>
-        /// Googleスプレッドシートの操作を提供するオブジェクト
-        /// </summary>
-        SheetsService sheetsService;
-        public SheetLoader()
-        {
-            sheetsService = GoogleAuthAgent.CreateSheetsService();
-        }
 
         /// <summary>
-        /// GoogleDrive上のスプレッドシートを読み込んで、パースして返す
+        /// スプレッドシートへのアクセスを提供するオブジェクト
         /// </summary>
-        /// <param name="sheetID">読み込むスプレッドシートの、GoogleDrive上でのID</param>
-        /// <returns>スプレッドシートをパースしたSheetDataオブジェクト</returns>
+        ISpreadSheetsService sheetsService;
+
+        public SheetLoader(ISpreadSheetsService _sheetsService)
+        {
+            sheetsService = _sheetsService;
+        }
         public SheetData LoadSheetData(
             string sheetID
         )
@@ -35,27 +29,20 @@ namespace GoogleDriveDownloader
             SheetData retVal = new SheetData(); // 返り値
 
             // まずは1行目を読み込んで、パラメータ名を取得する。
-            var colEdge = ColIdxToColName(COL_LIMIT);
-            var metaDataRange = $"B1:{colEdge}1"; // 1列目はIDで決まりなので2列目から取得する
-            var request = sheetsService
-                        .Spreadsheets
-                        .Values
-                        .Get(sheetID, metaDataRange);
-            var response = request.Execute();
-            var parameterNames = response.Values[0]; // 1行分しか取得しないので、即座に0番のリストを返しておく
+            var limitColName = ColIdxToColName(COL_LIMIT);
+            var metaDataRange = $"B1:{limitColName}1"; // 1列目はIDで決まりなので2列目から取得する
+            var values = sheetsService.Get(sheetID, metaDataRange);
+
+            var parameterNames = values[0]; // リストのリストになっているおり、0番目の要素が1行目を表している
             var parameterCount = parameterNames.Count; // 空欄は無視されるので、1行目の要素の数がそのままパラメータの数になる
+            var colEdge = ColIdxToColName(parameterCount);
 
             // 続いて2行目以降(データ本体)を読み込む。
             int rowIdx = 2;
             while (true)
             {
                 var range = $"A{rowIdx}:{colEdge}{rowIdx}";
-                request = sheetsService
-                        .Spreadsheets
-                        .Values
-                        .Get(sheetID, range);
-                response = request.Execute();
-                var values = response.Values;
+                values = sheetsService.Get(sheetID, range);
 
                 // 空の行を読み込んだ場合はValuesがnullになるので、それで全ての行を読み込んだかどうか判定
                 if (values == null)
@@ -89,35 +76,19 @@ namespace GoogleDriveDownloader
         private string ColIdxToColName(int idx)
         {
             const int ALPHABET_COUNT = 26;
+            idx++;
             string colName = "";
 
-            // 1桁目は0=Aなので、個別で扱う
-            int mod = idx % ALPHABET_COUNT;
-            colName += 'A' + mod;
-
-            // 2桁目以降は1=Aになる
-            idx -= mod;
             while (idx > 0)
             {
-                idx /= ALPHABET_COUNT;
-                mod = idx % ALPHABET_COUNT;
+                int mod = (idx - 1) % ALPHABET_COUNT;
+                colName = (char)(mod + 'A') + colName;
 
-                // A=1...Z=26なのでmod = 0->Z
-                if (mod == 0)
-                {
-                    colName += 'Z';
-                }
-                else
-                {
-                    colName += 'A' + (mod - 1);
-                }
+                idx -= mod;
+                idx /= ALPHABET_COUNT;
             }
 
-            // 上の桁が文字列の末尾に来ているので、反転する
-            var charArray = colName.ToCharArray();
-            System.Array.Reverse(charArray);
-
-            return new string(charArray);
+            return colName;
         }
     }
 }
