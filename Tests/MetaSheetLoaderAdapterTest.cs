@@ -100,4 +100,21 @@ public class MetaSheetLoaderAdapterTest
             AssertMetaSheetData(datas[i], actualDatas[i]);
         }
     }
+
+    /// <summary>
+    /// 要素数0のリストが渡された際に正しく振舞えるか確認するテスト
+    /// </summary>
+    [Test]
+    public void PassEmptyDatasTest()
+    {
+        // 要素数0のリストが渡された場合も、それをそのままUI側に渡してほしい
+
+        mockMetaSheetLoader.MetaSheetDatas = new List<MetaSheetData>();
+
+        mockUI.Load();
+        var actualDatas = mockUI.PassedMetaSheetDatas;
+        Assert.NotNull(actualDatas);
+        Assert.AreEqual(0, actualDatas.Count);
+        // 要素数が0であれば、中身は当然調べなくても良い
+    }
 }
