@@ -12,7 +12,7 @@ public class MockUILoadMetaSheetDataFunction : IUILoadMetaSheetDataFunction
     /// <summary>
     /// PassNewMetaSheetDatas関数で引数として渡されたMetaSheetDataのリスト
     /// </summary>
-    List<MetaSheetData> PassedMetaSheetDatas
+    public List<MetaSheetData> PassedMetaSheetDatas
     {
         get => passedMetaSheetDatas;
     }
