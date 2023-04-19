@@ -24,6 +24,6 @@ namespace GoogleDriveDownloader
         /// </param>
         void UpdateList(List<MetaSheetData> metaSheetDatas);
 
-        void RegisterOnExportSheet();
+        void RegisterOnExportSheet(OnExportSheetHandler _handler);
     }
 }
