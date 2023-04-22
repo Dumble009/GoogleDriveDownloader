@@ -6,7 +6,7 @@ using GoogleDriveDownloader;
 /// UpdateList関数に渡されたリストを保持しておき外部に公開する機能と、
 /// 任意のMetaSheetDataを引数として、シートのエクスポート操作をエミュレートすることが出来る
 /// </summary>
-public class MockSheetListUI : ISheetListUI
+public class MockSheetListUI : ISheetListUI, IUIElement
 {
     List<MetaSheetData> passedMetaSheetData;
     /// <summary>
@@ -38,5 +38,9 @@ public class MockSheetListUI : ISheetListUI
     public void ExportSheet(MetaSheetData sheetData)
     {
         handler(sheetData);
+    }
+
+    public void Draw()
+    {
     }
 }
