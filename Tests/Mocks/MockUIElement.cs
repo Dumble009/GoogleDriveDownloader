@@ -1,3 +1,4 @@
+using System;
 using GoogleDriveDownloader;
 
 /// <summary>
@@ -15,8 +16,19 @@ public class MockUIElement : IUIElement
         get => drawCallCount;
     }
 
+    /// <summary>
+    /// Draw関数を呼び出された時に呼び出されるイベント
+    /// </summary>
+    public event Action OnDraw;
+
+    public MockUIElement()
+    {
+        OnDraw = () => { };
+    }
+
     public void Draw()
     {
         drawCallCount++;
+        OnDraw();
     }
 }
