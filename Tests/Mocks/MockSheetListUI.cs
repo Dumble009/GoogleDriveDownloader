@@ -17,27 +17,9 @@ public class MockSheetListUI : ISheetListUI, IUIElement
         get => passedMetaSheetData;
     }
 
-    OnExportSheetHandler handler;
-
     public void UpdateList(List<MetaSheetData> metaSheetDatas)
     {
         passedMetaSheetData = metaSheetDatas;
-    }
-
-    public void RegisterOnExportSheet(OnExportSheetHandler _handler)
-    {
-        handler += _handler;
-    }
-
-    /// <summary>
-    /// 任意のMetaSheetDataを元に、エクスポート操作が行われた際のイベントを発行する
-    /// </summary>
-    /// <param name="sheetData">
-    /// エクスポートイベントの引数にしたいMetaSheetDataオブジェクト
-    /// </param>
-    public void ExportSheet(MetaSheetData sheetData)
-    {
-        handler(sheetData);
     }
 
     public void Draw()

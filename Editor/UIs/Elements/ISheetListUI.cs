@@ -3,14 +3,6 @@ using System.Collections.Generic;
 namespace GoogleDriveDownloader
 {
     /// <summary>
-    /// シートのエクスポート操作が行われた時に呼び出されるイベントのデリゲート
-    /// </summary>
-    /// <param name="data">
-    /// エクスポートしたいシートの情報を持ったMetaSheetData
-    /// </param>
-    public delegate void OnExportSheetHandler(MetaSheetData data);
-
-    /// <summary>
     /// メタシートから取得したシートデータを一覧表示するUIが実装するインタフェース
     /// </summary>
     public interface ISheetListUI
@@ -23,7 +15,5 @@ namespace GoogleDriveDownloader
         /// 新しく一覧表示したいMetaSheetDataのリスト
         /// </param>
         void UpdateList(List<MetaSheetData> metaSheetDatas);
-
-        void RegisterOnExportSheet(OnExportSheetHandler _handler);
     }
 }
