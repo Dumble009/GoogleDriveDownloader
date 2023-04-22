@@ -1,80 +1,83 @@
-/// <summary>
-/// メタシートの1行分にあたるデータを保持するクラス
-/// </summary>
-public class MetaSheetData
+namespace GoogleDriveDownloader
 {
-    int id;
     /// <summary>
-    /// メタシート内における、データのID
+    /// メタシートの1行分にあたるデータを保持するクラス
     /// </summary>
-    public int ID
+    public class MetaSheetData
     {
-        get
+        int id;
+        /// <summary>
+        /// メタシート内における、データのID
+        /// </summary>
+        public int ID
         {
-            return id;
+            get
+            {
+                return id;
+            }
         }
-    }
 
-    string sheetID;
-    /// <summary>
-    /// このデータが対象とするシートのシートID
-    /// </summary>
-    public string SheetID
-    {
-        get
+        string sheetID;
+        /// <summary>
+        /// このデータが対象とするシートのシートID
+        /// </summary>
+        public string SheetID
         {
-            return sheetID;
+            get
+            {
+                return sheetID;
+            }
         }
-    }
 
-    string sheetName;
-    /// <summary>
-    /// このデータが対象とするシート内における、参照シートの名称
-    /// </summary>
-    public string SheetName
-    {
-        get
+        string sheetName;
+        /// <summary>
+        /// このデータが対象とするシート内における、参照シートの名称
+        /// </summary>
+        public string SheetName
         {
-            return sheetName;
+            get
+            {
+                return sheetName;
+            }
         }
-    }
 
-    string savePath;
-    /// <summary>
-    /// このデータが対象とするシートから変換した内容を出力するパス
-    /// </summary>
-    public string SavePath
-    {
-        get
+        string savePath;
+        /// <summary>
+        /// このデータが対象とするシートから変換した内容を出力するパス
+        /// </summary>
+        public string SavePath
         {
-            return savePath;
+            get
+            {
+                return savePath;
+            }
         }
-    }
 
-    string displayName;
-    /// <summary>
-    /// このデータが対象とするシートをUI上で表示する際の名称
-    /// </summary>
-    public string DisplayName
-    {
-        get
+        string displayName;
+        /// <summary>
+        /// このデータが対象とするシートをUI上で表示する際の名称
+        /// </summary>
+        public string DisplayName
         {
-            return displayName;
+            get
+            {
+                return displayName;
+            }
         }
-    }
 
-    public MetaSheetData(
-        int _id,
-        string _sheetID,
-        string _sheetName,
-        string _savePath,
-        string _displayName
-    )
-    {
-        id = _id;
-        sheetID = _sheetID;
-        sheetName = _sheetName;
-        savePath = _savePath;
-        displayName = _displayName;
+        public MetaSheetData(
+            int _id,
+            string _sheetID,
+            string _sheetName,
+            string _savePath,
+            string _displayName
+        )
+        {
+            id = _id;
+            sheetID = _sheetID;
+            sheetName = _sheetName;
+            savePath = _savePath;
+            displayName = _displayName;
+        }
     }
 }
