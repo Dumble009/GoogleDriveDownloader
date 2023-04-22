@@ -51,15 +51,40 @@ public class LoadMetaSheetDataFunctionTest
     }
 
     /// <summary>
-    /// SetUIElementsでUI要素を渡す事が出来るか調べるテスト
+    /// MetaSheetDataを3つ含むListを作成
     /// </summary>
-    [Test]
-    public void SetUIElementsTest()
+    /// <returns>
+    /// MetaSheetDataを3つ含むList。呼び出すたびに異なるインスタンスが作られる
+    /// </returns>
+    private List<MetaSheetData> CreateMetaSheetData()
     {
-        Assert.DoesNotThrow(() =>
-        {
-            PassUIElements();
-        });
+        var data1 = new MetaSheetData(
+            1,
+            "SheetID1",
+            "SheetName1",
+            "SavePath1",
+            "DisplayName1"
+        );
+
+        var data2 = new MetaSheetData(
+            2,
+            "SheetID2",
+            "SheetName2",
+            "SavePath2",
+            "DisplayName2"
+        );
+
+        var data3 = new MetaSheetData(
+            3,
+            "SheetID3",
+            "SheetName3",
+            "SavePath3",
+            "DisplayName3"
+        );
+
+        return new List<MetaSheetData>() {
+            data1, data2, data3
+        };
     }
 
     /// <summary>
@@ -92,6 +117,36 @@ public class LoadMetaSheetDataFunctionTest
     }
 
     /// <summary>
+    /// リロードボタンを押し、全てのSheetListUIに想定通りの
+    /// MetaSheetDataのリストが渡されているか確認する処理
+    /// </summary>
+    /// <param name="reloadUI">
+    /// リロードイベントを発行するUIオブジェクト
+    /// </param>
+    /// <param name="expectedMetaSheetDatas">
+    /// 各SheetListUIに渡されるべきMetaSheetDataのリスト
+    /// </param>
+    /// <param name="sheetListUIs">
+    /// 渡された値を確認する対象のSheetListUI
+    /// </param>
+    private void PushRealodButtonThenCheckSheetList(
+        MockReloadUI reloadUI,
+        List<MetaSheetData> expectedMetaSheetDatas,
+        params MockSheetListUI[] sheetListUIs
+    )
+    {
+        reloadUI.Reload();
+
+        foreach (var sheetListUI in sheetListUIs)
+        {
+            AssertMetaDataLists(
+                expectedMetaSheetDatas,
+                sheetListUI.PassedMetaSheetData
+            );
+        }
+    }
+
+    /// <summary>
     /// リロード操作をしたらMetaSheetLoaderが読み込んだメタデータがそのまま
     /// SheetListUIに渡されるか調べるテスト
     /// </summary>
@@ -100,49 +155,58 @@ public class LoadMetaSheetDataFunctionTest
     {
         PassUIElements();
 
-        var data1 = new MetaSheetData(
-            1,
-            "SheetID1",
-            "SheetName1",
-            "SavePath1",
-            "DisplayName1"
-        );
-
-        var data2 = new MetaSheetData(
-            2,
-            "SheetID2",
-            "SheetName2",
-            "SavePath2",
-            "DisplayName2"
-        );
-
-        var data3 = new MetaSheetData(
-            3,
-            "SheetID3",
-            "SheetName3",
-            "SavePath3",
-            "DisplayName3"
-        );
-
-        var passedMetaSheetDatas = new List<MetaSheetData>()
-        {
-            data1,
-            data2,
-            data3
-        };
+        var passedMetaSheetDatas = CreateMetaSheetData();
 
         metaSheetLoader.MetaSheetDatas = passedMetaSheetDatas;
 
-        reloadUI.Reload();
-
-        AssertMetaDataLists(
+        PushRealodButtonThenCheckSheetList(
+            reloadUI,
             passedMetaSheetDatas,
-            sheetListUI1.PassedMetaSheetData
+            sheetListUI1,
+            sheetListUI2
+        );
+    }
+
+    /// <summary>
+    /// 途中で新たなUIを追加しても正常に動作するか確認するテスト
+    /// </summary>
+    [Test]
+    public void AddNewElementTest()
+    {
+        PassUIElements();
+
+        var reloadUI2 = new MockReloadUI();
+        var sheetListUI3 = new MockSheetListUI();
+
+        var newUIs = new List<IUIElement>() {
+            reloadUI,
+            reloadUI2,
+            sheetListUI1,
+            sheetListUI2,
+            sheetListUI3
+        };
+
+        // 古いSheetListにも新しく追加したSheetListにもデータが渡されるか
+        // 古いRealodUIにも新しく追加したReloadUIにも反応できるか
+
+        var passedMetaSheetDatas = CreateMetaSheetData();
+
+        metaSheetLoader.MetaSheetDatas = passedMetaSheetDatas;
+
+        PushRealodButtonThenCheckSheetList(
+            reloadUI,
+            passedMetaSheetDatas,
+            sheetListUI1,
+            sheetListUI2,
+            sheetListUI3
         );
 
-        AssertMetaDataLists(
+        PushRealodButtonThenCheckSheetList(
+            reloadUI2,
             passedMetaSheetDatas,
-            sheetListUI2.PassedMetaSheetData
+            sheetListUI1,
+            sheetListUI2,
+            sheetListUI3
         );
     }
 }
