@@ -186,6 +186,8 @@ public class LoadMetaSheetDataFunctionTest
             sheetListUI3
         };
 
+        target.SetUIElements(newUIs);
+
         // 古いSheetListにも新しく追加したSheetListにもデータが渡されるか
         // 古いRealodUIにも新しく追加したReloadUIにも反応できるか
 
