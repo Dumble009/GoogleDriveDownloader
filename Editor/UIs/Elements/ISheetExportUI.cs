@@ -15,6 +15,13 @@ namespace GoogleDriveDownloader
     /// </summary>
     public interface ISheetExportUI
     {
-        void RegisterOnExportSheet(OnExportSheetHandler handler);
+        /// <summary>
+        /// シートをエクスポートする操作が行われた際に
+        /// 呼び出されるイベントを登録する
+        /// </summary>
+        /// <param name="_handler">
+        /// シートをエクスポートする操作が行われた際に呼び出されるイベント
+        /// </param>
+        void RegisterOnExportSheet(OnExportSheetHandler _handler);
     }
 }
