@@ -109,7 +109,7 @@ public class LoadMetaSheetDataFunctionTest
 
         for (int i = 0; i < count; i++)
         {
-            TestUtil.AssertMetaSheetData(
+            TestUtil.AssertAreEqualMetaSheetData(
                 expected[i],
                 actual[i]
             );
