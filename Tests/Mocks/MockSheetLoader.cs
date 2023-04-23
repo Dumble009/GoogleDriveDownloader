@@ -15,18 +15,18 @@ public class MockSheetLoader : ISheetLoader
         set => sheet = value;
     }
 
-    string lastPassedSheetID;
+    string passedSheetID;
     /// <summary>
     /// LoadSheetData関数に
     /// </summary>
-    public string LastPassedSheetID
+    public string PassedSheetID
     {
-        get => lastPassedSheetID;
+        get => passedSheetID;
     }
 
     public SheetData LoadSheetData(string sheetID)
     {
-        lastPassedSheetID = sheetID;
+        passedSheetID = sheetID;
         return sheet;
     }
 }

@@ -128,7 +128,7 @@ public class MetaSheetLoaderTest
         var metaSheetDatas = target.LoadMetaSheet();
 
         Assert.AreEqual(dataCount, metaSheetDatas.Count);
-        Assert.AreEqual(EXPECTED_META_SHEET_ID, mockSheetLoader.LastPassedSheetID);
+        Assert.AreEqual(EXPECTED_META_SHEET_ID, mockSheetLoader.PassedSheetID);
         for (int i = 0; i < dataCount; i++)
         {
             int id = i + 1;
