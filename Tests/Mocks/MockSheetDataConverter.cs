@@ -12,7 +12,7 @@ public class MockSheetDataConverter : ISheetDataConverter
     /// <summary>
     /// Convert関数の返り値として返されるバイト配列
     /// </summary>
-    public List<byte> ConvetResult
+    public List<byte> ConvertResult
     {
         set => convertResult = value;
     }
