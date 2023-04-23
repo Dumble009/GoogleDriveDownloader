@@ -46,7 +46,7 @@ public class SheetExportFunctionTest
     public void Setup()
     {
         sheetLoader = new MockSheetLoader();
-        SheetData sheetData = new SheetData();
+        sheetData = new SheetData();
         sheetData.SetRow(
             "key",
             new Dictionary<string, string>() {
@@ -56,6 +56,8 @@ public class SheetExportFunctionTest
         sheetLoader.Sheet = sheetData;
 
         sheetDataConverter = new MockSheetDataConverter();
+
+        sheetExportUI = new MockSheetExportUI();
 
         target = new SheetExportFunction(sheetLoader, sheetDataConverter);
 

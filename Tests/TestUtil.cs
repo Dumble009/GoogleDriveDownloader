@@ -21,6 +21,9 @@ public class TestUtil
         MetaSheetData actual
     )
     {
+        // 中身を調べるので、どちらもnullであっては困る
+        Assert.NotNull(expected);
+        Assert.NotNull(actual);
         Assert.AreEqual(expected.ID, actual.ID);
         Assert.AreEqual(expected.SheetID, actual.SheetID);
         Assert.AreEqual(expected.SheetName, actual.SheetName);
@@ -43,6 +46,9 @@ public class TestUtil
         SheetData actual
     )
     {
+        // 中身を調べるので、どちらもnullであっては困る
+        Assert.NotNull(expected.Data);
+        Assert.NotNull(actual.Data);
         Assert.AreEqual(expected.Data, actual.Data);
     }
 }
