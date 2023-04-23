@@ -6,3 +6,6 @@ Credentials/**
 
 Designs/*.drawio.bkp
 Designs/*.drawio.bkp.meta
+
+Tests/Temp
+Tests/Temp.meta
