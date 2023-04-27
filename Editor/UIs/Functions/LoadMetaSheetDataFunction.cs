@@ -78,6 +78,7 @@ namespace GoogleDriveDownloader
         /// </summary>
         public void ForceLoad()
         {
+            OnReload();
         }
     }
 }
