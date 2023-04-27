@@ -51,7 +51,7 @@ public class LoadMetaSheetDataFunctionTest
     }
 
     /// <summary>
-    /// MetaSheetDataを3つ含むListを作成
+    /// テスト用のメタシートデータを作成する
     /// </summary>
     /// <returns>
     /// MetaSheetDataを3つ含むList。呼び出すたびに異なるインスタンスが作られる
@@ -85,6 +85,21 @@ public class LoadMetaSheetDataFunctionTest
         return new List<MetaSheetData>() {
             data1, data2, data3
         };
+    }
+
+    /// <summary>
+    /// メタシートのダミーデータを作成し、MetaSheetLoaderのモックにデータを渡す
+    /// </summary>
+    /// <returns>
+    /// 作成されたメタシートのデータ
+    /// </returns>
+    private List<MetaSheetData> CreateAndPassMetaSheetDataToMock()
+    {
+        var metaSheetDatas = CreateMetaSheetData();
+
+        metaSheetLoader.MetaSheetDatas = metaSheetDatas;
+
+        return metaSheetDatas;
     }
 
     /// <summary>
@@ -146,6 +161,8 @@ public class LoadMetaSheetDataFunctionTest
         }
     }
 
+
+
     /// <summary>
     /// リロード操作をしたらMetaSheetLoaderが読み込んだメタデータがそのまま
     /// SheetListUIに渡されるか調べるテスト
@@ -155,9 +172,7 @@ public class LoadMetaSheetDataFunctionTest
     {
         PassUIElements();
 
-        var passedMetaSheetDatas = CreateMetaSheetData();
-
-        metaSheetLoader.MetaSheetDatas = passedMetaSheetDatas;
+        var passedMetaSheetDatas = CreateAndPassMetaSheetDataToMock();
 
         PushRealodButtonThenCheckSheetList(
             reloadUI,
@@ -191,9 +206,7 @@ public class LoadMetaSheetDataFunctionTest
         // 古いSheetListにも新しく追加したSheetListにもデータが渡されるか
         // 古いRealodUIにも新しく追加したReloadUIにも反応できるか
 
-        var passedMetaSheetDatas = CreateMetaSheetData();
-
-        metaSheetLoader.MetaSheetDatas = passedMetaSheetDatas;
+        var passedMetaSheetDatas = CreateAndPassMetaSheetDataToMock();
 
         PushRealodButtonThenCheckSheetList(
             reloadUI,
