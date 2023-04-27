@@ -72,5 +72,13 @@ namespace GoogleDriveDownloader
                 sheetListUI.UpdateList(metaSheetDatas);
             }
         }
+
+        /// <summary>
+        /// UI操作が無くとも、強制的にメタシートのロードを行う
+        /// </summary>
+        public void ForceLoad()
+        {
+            OnReload();
+        }
     }
 }

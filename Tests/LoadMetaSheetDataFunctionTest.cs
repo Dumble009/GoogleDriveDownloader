@@ -51,7 +51,7 @@ public class LoadMetaSheetDataFunctionTest
     }
 
     /// <summary>
-    /// MetaSheetDataを3つ含むListを作成
+    /// テスト用のメタシートデータを作成する
     /// </summary>
     /// <returns>
     /// MetaSheetDataを3つ含むList。呼び出すたびに異なるインスタンスが作られる
@@ -85,6 +85,21 @@ public class LoadMetaSheetDataFunctionTest
         return new List<MetaSheetData>() {
             data1, data2, data3
         };
+    }
+
+    /// <summary>
+    /// メタシートのダミーデータを作成し、MetaSheetLoaderのモックにデータを渡す
+    /// </summary>
+    /// <returns>
+    /// 作成されたメタシートのデータ
+    /// </returns>
+    private List<MetaSheetData> CreateAndPassMetaSheetDataToMock()
+    {
+        var metaSheetDatas = CreateMetaSheetData();
+
+        metaSheetLoader.MetaSheetDatas = metaSheetDatas;
+
+        return metaSheetDatas;
     }
 
     /// <summary>
@@ -127,7 +142,7 @@ public class LoadMetaSheetDataFunctionTest
     /// 各SheetListUIに渡されるべきMetaSheetDataのリスト
     /// </param>
     /// <param name="sheetListUIs">
-    /// 渡された値を確認する対象のSheetListUI
+    /// 渡された値を確認する対象のSheetListUIのモックオブジェクト
     /// </param>
     private void PushRealodButtonThenCheckSheetList(
         MockReloadUI reloadUI,
@@ -137,6 +152,23 @@ public class LoadMetaSheetDataFunctionTest
     {
         reloadUI.Reload();
 
+        CheckSheetList(expectedMetaSheetDatas, sheetListUIs);
+    }
+
+    /// <summary>
+    /// ISheetListUIのモックに適切なメタシートデータが渡されているか調べるテスト
+    /// </summary>
+    /// <param name="expectedMetaSheetDatas">
+    /// 各SheetListUIに渡されるべきMetaSheetDataのリスト
+    /// </param>
+    /// <param name="sheetListUIs">
+    /// 渡された値を確認する対象のSheetListUIのモックオブジェクト
+    /// </param>
+    private void CheckSheetList(
+        List<MetaSheetData> expectedMetaSheetDatas,
+        params MockSheetListUI[] sheetListUIs
+    )
+    {
         foreach (var sheetListUI in sheetListUIs)
         {
             AssertMetaDataLists(
@@ -145,6 +177,7 @@ public class LoadMetaSheetDataFunctionTest
             );
         }
     }
+
 
     /// <summary>
     /// リロード操作をしたらMetaSheetLoaderが読み込んだメタデータがそのまま
@@ -155,9 +188,7 @@ public class LoadMetaSheetDataFunctionTest
     {
         PassUIElements();
 
-        var passedMetaSheetDatas = CreateMetaSheetData();
-
-        metaSheetLoader.MetaSheetDatas = passedMetaSheetDatas;
+        var passedMetaSheetDatas = CreateAndPassMetaSheetDataToMock();
 
         PushRealodButtonThenCheckSheetList(
             reloadUI,
@@ -191,9 +222,7 @@ public class LoadMetaSheetDataFunctionTest
         // 古いSheetListにも新しく追加したSheetListにもデータが渡されるか
         // 古いRealodUIにも新しく追加したReloadUIにも反応できるか
 
-        var passedMetaSheetDatas = CreateMetaSheetData();
-
-        metaSheetLoader.MetaSheetDatas = passedMetaSheetDatas;
+        var passedMetaSheetDatas = CreateAndPassMetaSheetDataToMock();
 
         PushRealodButtonThenCheckSheetList(
             reloadUI,
@@ -209,6 +238,25 @@ public class LoadMetaSheetDataFunctionTest
             sheetListUI1,
             sheetListUI2,
             sheetListUI3
+        );
+    }
+
+    /// <summary>
+    /// UIイベントを介さずにコードからメタシートのロード機能を呼び出す事が出来るか調べるテスト
+    /// </summary>
+    [Test]
+    public void ForceLoadTest()
+    {
+        PassUIElements();
+
+        var passedMetaSheetDatas = CreateAndPassMetaSheetDataToMock();
+
+        target.ForceLoad();
+
+        CheckSheetList(
+            passedMetaSheetDatas,
+            sheetListUI1,
+            sheetListUI2
         );
     }
 }
