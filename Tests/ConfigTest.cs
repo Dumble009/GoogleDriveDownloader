@@ -45,6 +45,6 @@ public class ConfigTest
 
         string expectedExportRootPath = Path.Combine(Application.dataPath, "/DummyFolder");
 
-        Assert.AreEqual(expectedExportRootPath, target.GetExportRootPath());
+        Assert.That(expectedExportRootPath, Is.SamePath(target.GetExportRootPath()));
     }
 }
