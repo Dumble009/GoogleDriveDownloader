@@ -18,6 +18,9 @@ public class MetaSheetLoaderTest
     /// <summary>
     /// このファイルからダミーのコンフィグファイルが格納されている
     /// ディレクトリまでの相対パス
+    /// MetaSheetLoaderから本物のコンフィグファイルまでの相対パスは"../../Config/Config.json"なので
+    /// ダミーのコンフィグフォルダよりも一階層低いフォルダをMetaSheetLoaderのパスとして返せば
+    /// ダミーのConfig.jsonを読み込む
     /// </summary>
     const string DUMMY_CONFIG_RELATIVE_PATH = "DummyResources/Config/DummyFolder";
 
@@ -86,9 +89,6 @@ public class MetaSheetLoaderTest
 
 
         // MetaSheetLoaderがダミーのコンフィグファイルを読み込むようにパスを作成
-        // MetaSheetLoaderから本物のコンフィグファイルまでの相対パスは"../Config/Config.json"なので
-        // モックのSourceCodeLocatorで、ダミーのコンフィグフォルダのパスをMetaSheetLoaderのパスとして返せば
-        // ダミーのConfig.jsonを読み込む
         var frame = new StackFrame(true);
         var dirPathOfThisFile = Path.GetDirectoryName(frame.GetFileName());
         var dummyConFigPath = Path.Combine(
