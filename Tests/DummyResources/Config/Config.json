@@ -1,4 +1,4 @@
 ﻿{
     "MetaSheetID"   : "dummy-meta-sheet-id",
-    "ExportPath"    : "/DummyFolder"
+    "ExportRootPath"    : "/DummyFolder"
 }
