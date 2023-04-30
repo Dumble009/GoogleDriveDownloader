@@ -45,7 +45,7 @@ namespace GoogleDriveDownloader
             var metaDataRange = $"{sheetName}B1:{limitColName}1"; // 1列目はIDで決まりなので2列目から取得する
             var values = sheetsService.Get(sheetID, metaDataRange);
 
-            var parameterNames = values[0]; // リストのリストになっているおり、0番目の要素が1行目を表している
+            var parameterNames = values[0]; // リストのリストになっており、0番目の要素が1行目を表している
             var parameterCount = parameterNames.Count; // 空欄は無視されるので、1行目の要素の数がそのままパラメータの数になる
             var colEdge = ColIdxToColName(parameterCount);
 
@@ -69,7 +69,9 @@ namespace GoogleDriveDownloader
                 Dictionary<string, string> rowDic = new Dictionary<string, string>();
                 for (int i = 0; i < parameterCount; i++)
                 {
-                    rowDic.Add((string)parameterNames[i], (string)rowData[i + 1]); // rowDataはA列から始まっているので、1個ずらす必要がある
+                    // parameterNamesはB列から始まっているが、
+                    // rowDataはA列から始まっているので、1個ずらす必要がある
+                    rowDic.Add((string)parameterNames[i], (string)rowData[i + 1]);
                 }
 
                 retVal.SetRow(id, rowDic);
