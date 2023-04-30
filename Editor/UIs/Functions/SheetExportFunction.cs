@@ -27,14 +27,18 @@ namespace GoogleDriveDownloader
         /// 依存性注入を行うコンストラクタ
         /// </summary>
         /// <param name="_sheetLoader">
-        /// シートの読み込み処理を行ってくれるオブジェクト
+        /// ドライブ上からシートのデータを読み込むために必要
         /// </param>
         /// <param name="_converter">
-        /// 読み込んだシートをファイル出力できる形式に変換してくれるオブジェクト
+        /// シートから読み込んだデータをエクスポートする形式に変換するために必要
+        /// </param>
+        /// <param name="_converter">
+        /// エクスポート先などの設定項目を取得するために必要
         /// </param>
         public SheetExportFunction(
             ISheetLoader _sheetLoader,
-            ISheetDataConverter _converter
+            ISheetDataConverter _converter,
+            IConfig _config
         )
         {
             sheetLoader = _sheetLoader;
