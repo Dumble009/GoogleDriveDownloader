@@ -19,14 +19,40 @@ public class MockSpreadSheetsService : ISpreadSheetsService
     }
 
     string passedSheetID;
+    /// <summary>
+    /// Get関数の引数として渡されたスプレッドシートのID
+    /// </summary>
     public string PassedSheetID
     {
         get => passedSheetID;
     }
 
+    string targetSheetName = string.Empty;
+    /// <summary>
+    /// Get関数で範囲に設定されているべきシートの名称
+    /// </summary>
+    public string TargetSheetName
+    {
+        set => targetSheetName = value;
+    }
+
     public IList<IList<object>> Get(string sheetID, string range)
     {
         passedSheetID = sheetID;
+
+        // シート名が指定されていなければならない時は、シート名をチェックする。
+        if (!string.IsNullOrEmpty(targetSheetName))
+        {
+            var splits = range.Split('!'); // シート名は!マークで区切られている
+            var passedSheetName = splits[0];
+
+            if (targetSheetName != passedSheetName)
+            {
+                throw new Exception($"Invalid Sheet Name was Passed. Expected is `{targetSheetName}`, but Actual is `{passedSheetName}`");
+            }
+
+            range = splits[1]; // 以降の範囲の解析ではシート名が無い物としているので、シート名以降を新たな範囲として差し戻す
+        }
 
         // まずrangeの文字列を分解し、開始列・行、終了列・行を示す文字列に分解する
         string startColStr = "", startRowStr = "", endColStr = "", endRowStr = "";
