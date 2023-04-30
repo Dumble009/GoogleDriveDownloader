@@ -176,4 +176,21 @@ public class SheetLoaderTest
         AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
         Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
     }
+
+    /// <summary>
+    /// スプレッドシート内のシート名まで含めてシートを読み込むテスト
+    /// </summary>
+    [Test]
+    public void LoadWithSheetNameTest()
+    {
+        var table = MakeTable(3, 3);
+        spreadSheetsService.Table = table;
+
+        const string SHEET_ID = "withSheetName";
+        const string SHEET_NAME = "SheetName";
+        spreadSheetsService.TargetSheetName = SHEET_NAME;
+
+        AssertTable(table, target.LoadSheetData(SHEET_ID, SHEET_NAME));
+        Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
+    }
 }
