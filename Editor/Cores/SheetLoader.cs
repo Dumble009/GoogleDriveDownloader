@@ -22,8 +22,10 @@ namespace GoogleDriveDownloader
         {
             sheetsService = _sheetsService;
         }
+
         public SheetData LoadSheetData(
-            string sheetID
+            string sheetID,
+            string sheetName
         )
         {
             SheetData retVal = new SheetData(); // 返り値

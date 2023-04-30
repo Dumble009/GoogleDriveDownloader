@@ -62,7 +62,7 @@ namespace GoogleDriveDownloader
 
             // メタシートを読み込んだ結果を辞書として貰い、イテレートする
             var metaSheetDataDic = sheetLoader
-            .LoadSheetData(config.GetMetaSheetID())
+            .LoadSheetData(config.GetMetaSheetID(), "") // メタシートはシートを一枚しか持たないので、シート名は指定しない
             .Data;
 
             foreach (var key in metaSheetDataDic.Keys)

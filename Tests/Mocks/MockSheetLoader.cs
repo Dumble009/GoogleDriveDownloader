@@ -17,14 +17,23 @@ public class MockSheetLoader : ISheetLoader
 
     string passedSheetID;
     /// <summary>
-    /// LoadSheetData関数に
+    /// LoadSheetData関数に引数として渡された、シートのID
     /// </summary>
     public string PassedSheetID
     {
         get => passedSheetID;
     }
 
-    public SheetData LoadSheetData(string sheetID)
+    string passedSheetName;
+    /// <summary>
+    /// LoadSheetData関数に引数として渡された、スプレッドシート内のシート名
+    /// </summary>
+    public string PassedSheetName
+    {
+        get => passedSheetName;
+    }
+
+    public SheetData LoadSheetData(string sheetID, string sheetName)
     {
         passedSheetID = sheetID;
         return sheet;

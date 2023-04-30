@@ -76,7 +76,10 @@ namespace GoogleDriveDownloader
         /// </param>
         private void OnExport(MetaSheetData metaSheetData)
         {
-            var sheetData = sheetLoader.LoadSheetData(metaSheetData.SheetID);
+            var sheetData = sheetLoader.LoadSheetData(
+                metaSheetData.SheetID,
+                metaSheetData.SheetName
+            );
             var fileContent = converter.Convert(sheetData);
 
             var savePath = Path.Combine(

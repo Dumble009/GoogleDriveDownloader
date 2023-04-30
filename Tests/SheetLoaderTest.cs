@@ -112,7 +112,7 @@ public class SheetLoaderTest
         spreadSheetsService.Table = table;
 
         const string SHEET_ID = "sheet3x3";
-        AssertTable(table, target.LoadSheetData(SHEET_ID));
+        AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
         Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
     }
 
@@ -130,7 +130,7 @@ public class SheetLoaderTest
         spreadSheetsService.Table = table;
 
         const string SHEET_ID = "sheet1000x1000";
-        AssertTable(table, target.LoadSheetData(SHEET_ID));
+        AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
         Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
     }
 
@@ -145,7 +145,7 @@ public class SheetLoaderTest
         spreadSheetsService.Table = table;
 
         const string SHEET_ID = "sheet2x2";
-        AssertTable(table, target.LoadSheetData(SHEET_ID));
+        AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
         Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
     }
 
@@ -159,7 +159,7 @@ public class SheetLoaderTest
         spreadSheetsService.Table = table;
 
         const string SHEET_ID = "wideSheet";
-        AssertTable(table, target.LoadSheetData(SHEET_ID));
+        AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
         Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
     }
 
@@ -173,7 +173,7 @@ public class SheetLoaderTest
         spreadSheetsService.Table = table;
 
         const string SHEET_ID = "longSheet";
-        AssertTable(table, target.LoadSheetData(SHEET_ID));
+        AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
         Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
     }
 }
