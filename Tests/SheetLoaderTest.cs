@@ -103,17 +103,42 @@ public class SheetLoaderTest
     }
 
     /// <summary>
+    /// シートの作成、読み込み指示、各種アサートを行う各テストの共通処理
+    /// </summary>
+    /// <param name="rowCount">
+    /// シートの行数。先頭にある列名の行を含む
+    /// </param>
+    /// <param name="colCount">
+    /// シートの列数。ID列を含む
+    /// </param>
+    /// <param name="sheetID">
+    /// シートのID文字列
+    /// </param>
+    /// <param name="sheetName">
+    /// スプレッドシート内のシート名。空文字列、nullも可
+    /// </param>
+    private void TestBody(
+        int rowCount,
+        int colCount,
+        string sheetID,
+        string sheetName
+    )
+    {
+        var table = MakeTable(rowCount, colCount);
+        spreadSheetsService.Table = table;
+        spreadSheetsService.TargetSheetName = sheetName;
+
+        AssertTable(table, target.LoadSheetData(sheetID, sheetName));
+        Assert.AreEqual(sheetID, spreadSheetsService.PassedSheetID);
+    }
+
+    /// <summary>
     /// 列名の行を含めて、3x3サイズのシートを正しく読み込めるかどうか
     /// </summary>
     [Test]
     public void LoadTest3x3()
     {
-        var table = MakeTable(3, 3);
-        spreadSheetsService.Table = table;
-
-        const string SHEET_ID = "sheet3x3";
-        AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
-        Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
+        TestBody(3, 3, "sheet3x3", "");
     }
 
     /// <summary>
@@ -124,14 +149,7 @@ public class SheetLoaderTest
     [Test]
     public void LoadTestMaximum()
     {
-        const int ROW_COUNT = 1000;
-        const int COL_COUNT = 1000;
-        var table = MakeTable(ROW_COUNT, COL_COUNT);
-        spreadSheetsService.Table = table;
-
-        const string SHEET_ID = "sheet1000x1000";
-        AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
-        Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
+        TestBody(1000, 1000, "sheet1000x1000", "");
     }
 
     /// <summary>
@@ -141,12 +159,7 @@ public class SheetLoaderTest
     [Test]
     public void LoadTestMinimum()
     {
-        var table = MakeTable(2, 2);
-        spreadSheetsService.Table = table;
-
-        const string SHEET_ID = "sheet2x2";
-        AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
-        Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
+        TestBody(2, 2, "sheet2x2", "");
     }
 
     /// <summary>
@@ -155,12 +168,7 @@ public class SheetLoaderTest
     [Test]
     public void LoadWideSheetTest()
     {
-        var table = MakeTable(10, 100); // ここの数値は適当
-        spreadSheetsService.Table = table;
-
-        const string SHEET_ID = "wideSheet";
-        AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
-        Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
+        TestBody(10, 100, "wideSheet", "");
     }
 
     /// <summary>
@@ -169,12 +177,7 @@ public class SheetLoaderTest
     [Test]
     public void LoadLongSheetTest()
     {
-        var table = MakeTable(100, 10);
-        spreadSheetsService.Table = table;
-
-        const string SHEET_ID = "longSheet";
-        AssertTable(table, target.LoadSheetData(SHEET_ID, ""));
-        Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
+        TestBody(100, 10, "longSheet", null);
     }
 
     /// <summary>
@@ -183,14 +186,15 @@ public class SheetLoaderTest
     [Test]
     public void LoadWithSheetNameTest()
     {
-        var table = MakeTable(3, 3);
-        spreadSheetsService.Table = table;
+        TestBody(3, 3, "withSheetName", "SheetName");
+    }
 
-        const string SHEET_ID = "withSheetName";
-        const string SHEET_NAME = "SheetName";
-        spreadSheetsService.TargetSheetName = SHEET_NAME;
-
-        AssertTable(table, target.LoadSheetData(SHEET_ID, SHEET_NAME));
-        Assert.AreEqual(SHEET_ID, spreadSheetsService.PassedSheetID);
+    /// <summary>
+    /// 日本語のシート名を指定してシートを読み込むテスト
+    /// </summary>
+    [Test]
+    public void LoadWithJPSheetNameTest()
+    {
+        TestBody(3, 3, "withJPSheetName", "シート名");
     }
 }

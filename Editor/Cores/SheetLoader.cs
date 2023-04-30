@@ -30,9 +30,19 @@ namespace GoogleDriveDownloader
         {
             SheetData retVal = new SheetData(); // 返り値
 
+            // シート名が指定されている場合は、範囲クエリに加えられる形に変換する
+            if (!string.IsNullOrEmpty(sheetName))
+            {
+                sheetName = $"{sheetName}!";
+            }
+            else if (sheetName == null)
+            {
+                sheetName = "";
+            }
+
             // まずは1行目を読み込んで、パラメータ名を取得する。
             var limitColName = ColIdxToColName(COL_LIMIT);
-            var metaDataRange = $"B1:{limitColName}1"; // 1列目はIDで決まりなので2列目から取得する
+            var metaDataRange = $"{sheetName}B1:{limitColName}1"; // 1列目はIDで決まりなので2列目から取得する
             var values = sheetsService.Get(sheetID, metaDataRange);
 
             var parameterNames = values[0]; // リストのリストになっているおり、0番目の要素が1行目を表している
@@ -43,7 +53,7 @@ namespace GoogleDriveDownloader
             int rowIdx = 2;
             while (true)
             {
-                var range = $"A{rowIdx}:{colEdge}{rowIdx}";
+                var range = $"{sheetName}A{rowIdx}:{colEdge}{rowIdx}";
                 values = sheetsService.Get(sheetID, range);
 
                 // 空の行を読み込んだ場合はValuesがnullになるので、それで全ての行を読み込んだかどうか判定
