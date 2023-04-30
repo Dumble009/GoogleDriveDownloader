@@ -7,7 +7,7 @@ namespace GoogleDriveDownloader
     /// GoogleDriveDownloaderのメイン画面
     /// </summary>
     public class MainWindow : EditorWindow
-    {/*
+    {
         /// <summary>
         /// 画面を構成する全てのUI要素のリスト
         /// </summary>
@@ -41,7 +41,7 @@ namespace GoogleDriveDownloader
                             );
         }
 
-        
+
         private void Awake()
         {
             uis = CreateUIElements();
@@ -98,7 +98,11 @@ namespace GoogleDriveDownloader
             // リスト内の順番は機能に影響を与えない
 
             retVal.Add(new LoadMetaSheetDataFunction(coreObjects.MetaSheetLoader));
-            retVal.Add(new SheetExportFunction(coreObjects.SheetLoader, coreObjects.SheetDataConverter));
+            retVal.Add(new SheetExportFunction(
+                coreObjects.SheetLoader,
+                coreObjects.SheetDataConverter,
+                coreObjects.Config
+            ));
 
             foreach (var uiFunc in retVal)
             {
@@ -125,7 +129,11 @@ namespace GoogleDriveDownloader
             retVal.SheetLoader = new SheetLoader(spreadSheetService);
 
             var sourceCodeLocator = new SourceCodeLocator();
-            retVal.MetaSheetLoader = new MetaSheetLoader(retVal.SheetLoader, sourceCodeLocator);
+            retVal.Config = new Config(sourceCodeLocator);
+            retVal.MetaSheetLoader = new MetaSheetLoader(
+                retVal.SheetLoader,
+                retVal.Config
+            );
 
             return retVal;
         }
@@ -152,7 +160,12 @@ namespace GoogleDriveDownloader
             /// シートのエクスポート処理を行う際に必要
             /// </summary>
             public ISheetDataConverter SheetDataConverter;
+
+            /// <summary>
+            /// アプリケーションの設定項目
+            /// シートのエクスポート処理、及びメタシートの読み込みを行う際に必要
+            /// </summary>
+            public IConfig Config;
         }
-        */
     }
 }
