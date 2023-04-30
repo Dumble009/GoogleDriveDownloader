@@ -7,7 +7,7 @@ namespace GoogleDriveDownloader
     /// GoogleDriveDownloaderのメイン画面
     /// </summary>
     public class MainWindow : EditorWindow
-    {
+    {/*
         /// <summary>
         /// 画面を構成する全てのUI要素のリスト
         /// </summary>
@@ -41,6 +41,7 @@ namespace GoogleDriveDownloader
                             );
         }
 
+        
         private void Awake()
         {
             uis = CreateUIElements();
@@ -152,5 +153,6 @@ namespace GoogleDriveDownloader
             /// </summary>
             public ISheetDataConverter SheetDataConverter;
         }
+        */
     }
 }
