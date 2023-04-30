@@ -51,11 +51,10 @@ namespace GoogleDriveDownloader
 
         public MetaSheetLoader(
             ISheetLoader _sheetLoader,
-            ISourceCodeLocator _sourceCodeLocator
+            IConfig _config
         )
         {
             sheetLoader = _sheetLoader;
-            sourceCodeLocator = _sourceCodeLocator;
         }
 
         /// <summary>

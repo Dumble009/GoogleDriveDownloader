@@ -16,15 +16,6 @@ public class MetaSheetLoaderTest
     const string EXPECTED_META_SHEET_ID = "dummy-meta-sheet-id";
 
     /// <summary>
-    /// このファイルからダミーのコンフィグファイルが格納されている
-    /// ディレクトリまでの相対パス
-    /// MetaSheetLoaderから本物のコンフィグファイルまでの相対パスは"../../Config/Config.json"なので
-    /// ダミーのコンフィグフォルダよりも一階層低いフォルダをMetaSheetLoaderのパスとして返せば
-    /// ダミーのConfig.jsonを読み込む
-    /// </summary>
-    const string DUMMY_CONFIG_RELATIVE_PATH = "DummyResources/Config/DummyFolder";
-
-    /// <summary>
     /// メタシートにおける、シートIDのパラメータ名
     /// </summary>
     const string META_SHEET_PARAMETER_NAME_SHEET_ID = "SheetID";
@@ -75,27 +66,18 @@ public class MetaSheetLoaderTest
     MockSheetLoader mockSheetLoader;
 
     /// <summary>
-    /// targetに渡すISourceCodeLocatorのモックオブジェクト
+    /// targetに渡すダミーのコンフィグオブジェクト
     /// </summary>
-    MockSourceCodeLocator mockSourceCodeLocator;
+    MockConfig mockConfig;
 
     [SetUp]
     public void Setup()
     {
         mockSheetLoader = new MockSheetLoader();
-        mockSourceCodeLocator = new MockSourceCodeLocator();
+        mockConfig = new MockConfig();
+        mockConfig.MetaSheetID = EXPECTED_META_SHEET_ID;
 
-        target = new MetaSheetLoader(mockSheetLoader, mockSourceCodeLocator);
-
-
-        // MetaSheetLoaderがダミーのコンフィグファイルを読み込むようにパスを作成
-        var frame = new StackFrame(true);
-        var dirPathOfThisFile = Path.GetDirectoryName(frame.GetFileName());
-        var dummyConFigPath = Path.Combine(
-            dirPathOfThisFile,
-            DUMMY_CONFIG_RELATIVE_PATH
-        );
-        mockSourceCodeLocator.ReturnPath = dummyConFigPath;
+        target = new MetaSheetLoader(mockSheetLoader, mockConfig);
     }
 
     /// <summary>
