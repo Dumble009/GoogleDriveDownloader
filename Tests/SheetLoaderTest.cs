@@ -7,140 +7,194 @@ using GoogleDriveDownloader;
 /// </summary>
 public class SheetLoaderTest
 {
-    // ----------------------------------------------------------
-    // テスト用のシートは6列4行
-    // 1列目はIDが記載され、1行目には各列の名前が記載されている
-    // よって実質的には5つのパラメータを持つ3つの値を保持している
-    // ----------------------------------------------------------
-
-
     /// <summary>
     /// テスト対象のオブジェクト
     /// </summary>
-    SheetLoader sheetLoader;
+    SheetLoader target;
 
     /// <summary>
-    /// テスト用のデータが書かれたスプレッドシートのID
+    /// ISpreadSheetsServiceのモックオブジェクト
     /// </summary>
-    const string TEST_SHEET_ID = "1V9Lfk4Dvm9EDkcG_xcUgSnQWtIpuL2sKk9UHxOxMzHk";
+    MockSpreadSheetsService spreadSheetsService;
 
     /// <summary>
-    /// テスト用のスプレッドシート上のパラメータの数
+    /// テーブルの1列目にある"ID"列の名称
     /// </summary>
-    const int TEST_SHEET_PARAMETER_COUNT = 5;
+    const string COL_NAME_ID = "ID";
 
-    /// <summary>
-    /// テスト用のスプレッドシート上のデータの数
-    /// </summary>
-    const int TEST_SHEET_DATA_COUNT = 3;
-
-    /// <summary>
-    /// テスト用のスプレッドシート上のパラメータの名称
-    /// </summary>
-    static readonly string[] TEST_SHEET_PARAMETER_NAMES =
-        new string[TEST_SHEET_PARAMETER_COUNT] {
-            "NAME",
-            "ATK",
-            "DEF",
-            "SPD",
-            "HP"
-        }; // const配列は作ることが出来ないので、static readonlyで代用する
-    static readonly string[,] TEST_SHEET_PARAMETER_VALUES =
-        new string[TEST_SHEET_DATA_COUNT, TEST_SHEET_PARAMETER_COUNT]{
-            {"Tom",     "1",    "2",    "3",    "4"},
-            {"Bob",     "5",    "6",    "7",    "8"},
-            {"Jone",    "9",    "10",   "11",   "12"}
-        };
 
     [SetUp]
     public void Setup()
     {
-        sheetLoader = new SheetLoader();
+        spreadSheetsService = new MockSpreadSheetsService();
+        target = new SheetLoader(spreadSheetsService);
     }
 
     /// <summary>
-    /// 指定されたシートを読み込み、その結果が意図したとおりになっているか調べる
+    /// tableを元に正しくsheetDataに変換できたか調べる
     /// </summary>
-    /// <param name="sheetID">読み込みたいシートのID</param>
-    /// <param name="parameterCount">シートから読み込みたいパラメータの数</param>
-    /// <param name="expectedSheet">
-    /// シートから読み込まれることが想定される内容。
-    /// expectedData[i][j] = i個目のデータのj番目のパラメータの(パラメータ名、値)のタプル
+    /// <param name="table">
+    /// 変換元のテーブル。1行目は必ず列名を持っている事
     /// </param>
-    private void LoadAndCheckSheet(string sheetID,
-                                int parameterCount,
-                                List<List<(string, string)>> expectedSheet)
-    {
-        var sheetData = sheetLoader.LoadSheetData(sheetID);
-
-        // ちゃんと意味のある値は返ってきているか？
-        Assert.NotNull(sheetData);
-
-        int dataCount = expectedSheet.Count;
-        // 各データについて
-        for (int id = 1; id <= dataCount; id++)
-        {
-            // 適切なIDをキーとして持っているか？
-            Dictionary<string, string> row = null;
-            Assert.DoesNotThrow(
-                () =>
-                {
-                    row = sheetData.GetRow(id.ToString());
-                }
-            );
-            Assert.NotNull(row);
-
-            // パラメータの個数はあっているか？
-            Assert.AreEqual(parameterCount, row.Keys.Count);
-
-            // パラメータの値はあっているか？
-            for (int i = 0; i < parameterCount; i++)
-            {
-                var (expectedKey, expectedValue) = expectedSheet[id - 1][i];
-
-                Assert.True(row.ContainsKey(expectedKey));
-                Assert.AreEqual(expectedValue, row[expectedKey]);
-            }
-        }
-    }
-
-    /// <summary>
-    /// 想定解を作成する
-    /// </summary>
-    /// <param name="dataCount">想定解に含まれるデータの個数</param>
-    /// <param name="parameterCount">想定解を構成するパラメータの数</param>
-    /// <returns>dataCount個のデータを持ち、parameterCount個のパラメータからなる想定解</returns>
-    private List<List<(string, string)>> CreateExpectedSheet(
-        int dataCount,
-        int parameterCount
+    /// <param name="sheetData">
+    /// tableから変換されたSheetDataオブジェクト
+    /// </param>
+    private void AssertTable(
+        List<List<string>> table,
+        SheetData sheetData
     )
     {
-        var expectedData = new List<List<(string, string)>>();
-        for (int dataID = 0; dataID < dataCount; dataID++)
+        int rowCount = table.Count;
+        int colCount = table[0].Count;
+        var colNames = table[0];
+
+        Assert.AreEqual(rowCount - 1, sheetData.Data.Count); // 1行目は列名が書かれており、SheetDataには含まれないので、行数が1つ減る
+        for (int i = 1; i < rowCount; i++)
         {
-            var expectedRow = new List<(string, string)>();
-            for (int parameterID = 0; parameterID < parameterCount; parameterID++)
+            var sheetRow = sheetData.GetRow(
+                table[i][0]
+            );
+            Assert.AreEqual(colCount - 1, sheetRow.Count); // 1列目のIDはSheetDataではキーとして扱われるので、列数が1つ減る
+            for (int j = 1; j < colCount; j++)
             {
-                expectedRow.Add(
-                    (TEST_SHEET_PARAMETER_NAMES[parameterID],
-                    TEST_SHEET_PARAMETER_VALUES[dataID, parameterID])
-                );
+                var colName = colNames[j];
+                Assert.AreEqual(table[i][j], sheetRow[colName]);
             }
-
-            expectedData.Add(expectedRow);
         }
-
-        return expectedData;
     }
 
     /// <summary>
-    /// シート全体のデータを正しく読み込めるか確認するテスト
+    /// シートデータの代わりとなるリストを作成する
+    /// </summary>
+    /// <param name="rowCount">
+    /// シートの行数。列名が記載された1行目を含む
+    /// </param>
+    /// <param name="colCount">
+    /// シートの列数。IDが記載された1列目を含む
+    /// </param>
+    /// <returns></returns>
+    private List<List<string>> MakeTable(
+        int rowCount,
+        int colCount
+    )
+    {
+        var table = new List<List<string>>();
+
+        // 1行目にはパラメータ名が書かれる
+        table.Add(new List<string>(colCount));
+        table[0].Add(COL_NAME_ID);
+        for (int i = 1; i < colCount; i++)
+        {
+            table[0].Add("PARAM_" + i.ToString());
+        }
+
+        // テーブル本体の作成
+        for (int i = 1; i < rowCount; i++)
+        {
+            table.Add(new List<string>(colCount));
+            table[i].Add("ID_" + i.ToString());
+            for (int j = 1; j < colCount; j++)
+            {
+                table[i].Add(i.ToString() + "_" + j.ToString());
+            }
+        }
+
+        return table;
+    }
+
+    /// <summary>
+    /// シートの作成、読み込み指示、各種アサートを行う各テストの共通処理
+    /// </summary>
+    /// <param name="rowCount">
+    /// シートの行数。先頭にある列名の行を含む
+    /// </param>
+    /// <param name="colCount">
+    /// シートの列数。ID列を含む
+    /// </param>
+    /// <param name="sheetID">
+    /// シートのID文字列
+    /// </param>
+    /// <param name="sheetName">
+    /// スプレッドシート内のシート名。空文字列、nullも可
+    /// </param>
+    private void TestBody(
+        int rowCount,
+        int colCount,
+        string sheetID,
+        string sheetName
+    )
+    {
+        var table = MakeTable(rowCount, colCount);
+        spreadSheetsService.Table = table;
+        spreadSheetsService.TargetSheetName = sheetName;
+
+        AssertTable(table, target.LoadSheetData(sheetID, sheetName));
+        Assert.AreEqual(sheetID, spreadSheetsService.PassedSheetID);
+    }
+
+    /// <summary>
+    /// 列名の行を含めて、3x3サイズのシートを正しく読み込めるかどうか
     /// </summary>
     [Test]
-    public void SheetLoaderTestLoadAll()
+    public void LoadTest3x3()
     {
-        var expectedData = CreateExpectedSheet(TEST_SHEET_DATA_COUNT, TEST_SHEET_PARAMETER_COUNT);
+        TestBody(3, 3, "sheet3x3", "");
+    }
 
-        LoadAndCheckSheet(TEST_SHEET_ID, TEST_SHEET_PARAMETER_COUNT, expectedData);
+    /// <summary>
+    /// 列名の行を含めて、1000x1000サイズのシートを読み込めるか調べるテスト
+    /// 1000はこのツールにおける列数の限界値
+    /// 行数には限界値が無いが、ここでは1000としておく
+    /// </summary>
+    [Test]
+    public void LoadTestMaximum()
+    {
+        TestBody(1000, 1000, "sheet1000x1000", "");
+    }
+
+    /// <summary>
+    /// 最小サイズのシートを読み込むテスト
+    /// 最小サイズは2x2(1行目は必ず列名があり、1列目は必ずIDがあるため)
+    /// </summary>
+    [Test]
+    public void LoadTestMinimum()
+    {
+        TestBody(2, 2, "sheet2x2", "");
+    }
+
+    /// <summary>
+    /// 行数よりも列数の方が多いシートを読み込むテスト
+    /// </summary>
+    [Test]
+    public void LoadWideSheetTest()
+    {
+        TestBody(10, 100, "wideSheet", "");
+    }
+
+    /// <summary>
+    /// 列数よりも行数の方が多いシートを読み込むテスト
+    /// </summary>
+    [Test]
+    public void LoadLongSheetTest()
+    {
+        TestBody(100, 10, "longSheet", null);
+    }
+
+    /// <summary>
+    /// スプレッドシート内のシート名まで含めてシートを読み込むテスト
+    /// </summary>
+    [Test]
+    public void LoadWithSheetNameTest()
+    {
+        TestBody(3, 3, "withSheetName", "SheetName");
+    }
+
+    /// <summary>
+    /// 日本語のシート名を指定してシートを読み込むテスト
+    /// </summary>
+    [Test]
+    public void LoadWithJPSheetNameTest()
+    {
+        TestBody(3, 3, "withJPSheetName", "シート名");
     }
 }
