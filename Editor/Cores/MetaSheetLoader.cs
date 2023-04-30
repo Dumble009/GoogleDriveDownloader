@@ -1,6 +1,4 @@
-using System.IO;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace GoogleDriveDownloader
 {
@@ -45,55 +43,17 @@ namespace GoogleDriveDownloader
         ISheetLoader sheetLoader;
 
         /// <summary>
-        /// このコードが書かれているファイルのパスを計算するオブジェクト
+        /// コンフィグファイルから読み込んだ設定項目を保持しているオブジェクト
         /// </summary>
-        ISourceCodeLocator sourceCodeLocator;
+        IConfig config;
 
         public MetaSheetLoader(
             ISheetLoader _sheetLoader,
-            ISourceCodeLocator _sourceCodeLocator
+            IConfig _config
         )
         {
             sheetLoader = _sheetLoader;
-            sourceCodeLocator = _sourceCodeLocator;
-        }
-
-        /// <summary>
-        /// コンフィグファイルのパスを取得する
-        /// </summary>
-        /// <returns>このソースコードのファイルパスを元に計算された設定ファイルのパス</returns>
-        private string GetConfigPath()
-        {
-            // このソースコードが格納されているディレクトリのパスを取得し、
-            // そこからの相対パスとして設定ファイルのパスを作成
-            string sourceDirPath = sourceCodeLocator.GetDirectoryOfSourceCodePath();
-
-            return Path.Combine(sourceDirPath, CONFIG_RELATIVE_PATH);
-        }
-
-        /// <summary>
-        /// 設定ファイルからメタシートのシートIDを読み込んで返す
-        /// </summary>
-        /// <returns>メタシートのシートIDの文字列</returns>
-        private string LoadMetaSheetID()
-        {
-            try
-            {
-                // jsonファイルをテキスト形式で開き、読み込んだ文字列をパースする
-                using (StreamReader file = File.OpenText(GetConfigPath()))
-                {
-                    string jsonString = file.ReadToEnd();
-
-                    var dic = JsonConvert
-                    .DeserializeObject<Dictionary<string, string>>(jsonString);
-
-                    return dic[CONFIG_FILE_KEY_ID];
-                }
-            }
-            catch (System.Exception e)
-            {
-                throw new System.Exception("Loading Meta Sheet ID failed." + e.Message);
-            }
+            config = _config;
         }
 
         public List<MetaSheetData> LoadMetaSheet()
@@ -102,7 +62,7 @@ namespace GoogleDriveDownloader
 
             // メタシートを読み込んだ結果を辞書として貰い、イテレートする
             var metaSheetDataDic = sheetLoader
-            .LoadSheetData(LoadMetaSheetID())
+            .LoadSheetData(config.GetMetaSheetID(), "") // メタシートはシートを一枚しか持たないので、シート名は指定しない
             .Data;
 
             foreach (var key in metaSheetDataDic.Keys)

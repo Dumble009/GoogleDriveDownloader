@@ -9,14 +9,19 @@ namespace GoogleDriveDownloader
     public class SheetExportFunction : IUIFunction
     {
         /// <summary>
-        /// シートの読み込み処理を行うオブジェクト
+        /// ドライブ上からシートを読み込むために使用する
         /// </summary>
         ISheetLoader sheetLoader;
 
         /// <summary>
-        /// 読み込んだシートのデータをファイル出力できる形式に変換してくれるオブジェクト
+        /// ドライブから読み込んだシートをエクスポート可能な形式に変換するために使う
         /// </summary>
         ISheetDataConverter converter;
+
+        /// <summary>
+        /// ファイルのエクスポート先を設定ファイルから取得するために使う
+        /// </summary>
+        IConfig config;
 
         /// <summary>
         /// このオブジェクトが購読している、エクスポート操作が行われた際にイベントを発行するUIのリスト
@@ -27,18 +32,23 @@ namespace GoogleDriveDownloader
         /// 依存性注入を行うコンストラクタ
         /// </summary>
         /// <param name="_sheetLoader">
-        /// シートの読み込み処理を行ってくれるオブジェクト
+        /// ドライブ上からシートのデータを読み込むために必要
         /// </param>
         /// <param name="_converter">
-        /// 読み込んだシートをファイル出力できる形式に変換してくれるオブジェクト
+        /// シートから読み込んだデータをエクスポートする形式に変換するために必要
+        /// </param>
+        /// <param name="_converter">
+        /// エクスポート先などの設定項目を取得するために必要
         /// </param>
         public SheetExportFunction(
             ISheetLoader _sheetLoader,
-            ISheetDataConverter _converter
+            ISheetDataConverter _converter,
+            IConfig _config
         )
         {
             sheetLoader = _sheetLoader;
             converter = _converter;
+            config = _config;
 
             exportUIs = new List<ISheetExportUI>();
         }
@@ -66,10 +76,25 @@ namespace GoogleDriveDownloader
         /// </param>
         private void OnExport(MetaSheetData metaSheetData)
         {
-            var sheetData = sheetLoader.LoadSheetData(metaSheetData.SheetID);
+            var sheetData = sheetLoader.LoadSheetData(
+                metaSheetData.SheetID,
+                metaSheetData.SheetName
+            );
             var fileContent = converter.Convert(sheetData);
 
-            File.WriteAllBytes(metaSheetData.SavePath, fileContent.ToArray()); // WriteAllBytesはファイルがあれば上書きし、なければ作って書く
+            var savePath = Path.Combine(
+                config.GetExportRootPath(),
+                metaSheetData.SavePath
+            );
+
+            // ディレクトリが無ければ作る必要がある
+            var directoryName = Path.GetDirectoryName(savePath);
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
+            File.WriteAllBytes(savePath, fileContent.ToArray()); // WriteAllBytesはファイルがあれば上書きし、なければ作って書く
         }
     }
 }

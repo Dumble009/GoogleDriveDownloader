@@ -1,6 +1,4 @@
-using UnityEngine;
 using UnityEditor;
-using System.IO;
 using System.Collections.Generic;
 
 namespace GoogleDriveDownloader
@@ -11,19 +9,24 @@ namespace GoogleDriveDownloader
     public class MainWindow : EditorWindow
     {
         /// <summary>
-        /// ダウンロード対象のスプレッドシートのID
+        /// 画面を構成する全てのUI要素のリスト
         /// </summary>
-        string sheetID;
+        List<IUIElement> uis;
 
         /// <summary>
-        /// スプレッドシートから読み込んだ内容を書き込むファイルのパス。Assets以下の相対パスで指定する。
+        /// コア機能のオブジェクトをまとめて保持するオブジェクト
         /// </summary>
-        string savePath;
+        CoreObjects coreObjects;
 
         /// <summary>
-        /// スプレッドシートの内容を変換してくれるオブジェクト
+        /// UIが提供する全ての機能のリスト
         /// </summary>
-        ISheetDataConverter converter;
+        List<IUIFunction> uiFunctions;
+
+        /// <summary>
+        /// UIの描画処理を行うオブジェクト
+        /// </summary>
+        UIDrawer uiDrawer;
 
         /// <summary>
         /// ウインドウをオープンする
@@ -38,53 +41,131 @@ namespace GoogleDriveDownloader
                             );
         }
 
-        /// <summary>
-        /// 各UIウィジェットを作成
-        /// </summary>
-        void OnGUI()
+
+        private void Awake()
         {
-            sheetID = EditorGUILayout.TextField(
-                "Sheet ID",
-                sheetID
-            );
+            uis = CreateUIElements();
 
-            savePath = EditorGUILayout.TextField(
-                "Save Path",
-                savePath
-            );
+            coreObjects = CreateCoreObjects();
 
-            if (GUILayout.Button("Download"))
+            uiFunctions = CreateUIFunctions(coreObjects, uis);
+
+            uiDrawer = new UIDrawer(uis);
+        }
+
+        private void OnGUI()
+        {
+            uiDrawer.Draw();
+        }
+
+
+        /// <summary>
+        /// ウインドウに描画する全てのUIをインスタンス化し、そのリストを返す
+        /// </summary>
+        /// <returns>
+        /// 描画対象のUIのリスト。上に描画されるものから順に先頭に配置されている
+        /// </returns>
+        private static List<IUIElement> CreateUIElements()
+        {
+            var retVal = new List<IUIElement>();
+
+            // ウインドウの描画に必要なのは、リロードボタンと、シートの一覧表示
+            // リストの先頭から順番に上に描画されていくので、上に描画してほしい物から順番にリストに入れていく
+
+            retVal.Add(new ReloadUI());
+            retVal.Add(new SheetList());
+
+            return retVal;
+        }
+
+        /// <summary>
+        /// UI機能を実装するオブジェクトを全て作成し、既存のUI要素と紐づけて返す
+        /// </summary>
+        /// <param name="coreObjects">
+        /// UI機能が依存しているコア機能のオブジェクト群
+        /// </param>
+        /// <param name="uis">
+        /// UI機能と結びつくUI要素のリスト
+        /// </param>
+        /// <returns>
+        /// コア機能の依存性の注入、及びUI要素との紐づけが完了したUI機能オブジェクトのリスト
+        /// </returns>
+        private static List<IUIFunction> CreateUIFunctions(CoreObjects coreObjects, List<IUIElement> uis)
+        {
+            var retVal = new List<IUIFunction>();
+
+            // 必要なUI機能は、メタシートデータの再読み込み機能とシートのエクスポート機能
+            // リスト内の順番は機能に影響を与えない
+
+            retVal.Add(new LoadMetaSheetDataFunction(coreObjects.MetaSheetLoader));
+            retVal.Add(new SheetExportFunction(
+                coreObjects.SheetLoader,
+                coreObjects.SheetDataConverter,
+                coreObjects.Config
+            ));
+
+            foreach (var uiFunc in retVal)
             {
-                var loader = new SheetLoader(
-                    new SpreadSheetsService()
-                );
-                var sheetData = loader.LoadSheetData(sheetID);
-
-                ShowRowData(sheetData.GetRow("1"));
-                ShowRowData(sheetData.GetRow("2"));
-                ShowRowData(sheetData.GetRow("3"));
-
-                converter = new JSONConverter();
-
-                // 最終的なファイルの出力先となるパス
-                string completePath = Path.Combine(Application.dataPath, savePath);
-                ExportToFile(completePath, converter.Convert(sheetData));
+                uiFunc.SetUIElements(uis);
             }
+
+            return retVal;
         }
 
         /// <summary>
-        /// bytesの内容をファイルへと出力する。
+        /// UI機能が必要とするコア機能のオブジェクトを、依存関係も含めて全て作成して返す
         /// </summary>
-        /// <param name="path">出力先のファイルパス</param>
-        /// <param name="bytes">出力するバイト配列の内容</param>
-        void ExportToFile(string path, List<byte> bytes)
+        /// <returns>
+        /// UI機能が必要とするコア機能のオブジェクトを一まとめにしたオブジェクト
+        /// </returns>
+        private static CoreObjects CreateCoreObjects()
         {
-            File.WriteAllBytes(path, bytes.ToArray());
+            var retVal = new CoreObjects();
+
+            retVal.SheetDataConverter = new JSONConverter();
+
+            var spreadSheetService = new SpreadSheetsService();
+
+            retVal.SheetLoader = new SheetLoader(spreadSheetService);
+
+            var sourceCodeLocator = new SourceCodeLocator();
+            retVal.Config = new Config(sourceCodeLocator);
+            retVal.MetaSheetLoader = new MetaSheetLoader(
+                retVal.SheetLoader,
+                retVal.Config
+            );
+
+            return retVal;
         }
 
-        private void ShowRowData(Dictionary<string, string> rowData)
+        /// <summary>
+        /// UI機能が必要とするコア機能のオブジェクトをまとめて保持するクラス
+        /// </summary>
+        private class CoreObjects
         {
-            Debug.Log($"NAME : {rowData["NAME"]}, ATK : {rowData["ATK"]}, DEF : {rowData["DEF"]}, SPD : {rowData["SPD"]}, HP : {rowData["HP"]}");
+            /// <summary>
+            /// メタシートからデータを読み込む処理を行うオブジェクト。
+            /// メタシートのリロード操作を行う際に必要
+            /// </summary>
+            public IMetaSheetLoader MetaSheetLoader;
+
+            /// <summary>
+            /// シートからデータを読み込む処理を行うオブジェクト。
+            /// シートのエクスポート処理を行う際に必要
+            /// </summary>
+            public ISheetLoader SheetLoader;
+
+            /// <summary>
+            /// シートから取得したデータをゲームで利用可能な形式等に変換するオブジェクト。
+            /// シートのエクスポート処理を行う際に必要
+            /// </summary>
+            public ISheetDataConverter SheetDataConverter;
+
+            /// <summary>
+            /// アプリケーションの設定項目
+            /// シートのエクスポート処理、及びメタシートの読み込みを行う際に必要
+            /// </summary>
+            public IConfig Config;
         }
     }
 }

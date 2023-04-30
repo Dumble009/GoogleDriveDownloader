@@ -22,18 +22,30 @@ namespace GoogleDriveDownloader
         {
             sheetsService = _sheetsService;
         }
+
         public SheetData LoadSheetData(
-            string sheetID
+            string sheetID,
+            string sheetName
         )
         {
             SheetData retVal = new SheetData(); // 返り値
 
+            // シート名が指定されている場合は、範囲クエリに加えられる形に変換する
+            if (!string.IsNullOrEmpty(sheetName))
+            {
+                sheetName = $"{sheetName}!";
+            }
+            else if (sheetName == null)
+            {
+                sheetName = "";
+            }
+
             // まずは1行目を読み込んで、パラメータ名を取得する。
             var limitColName = ColIdxToColName(COL_LIMIT);
-            var metaDataRange = $"B1:{limitColName}1"; // 1列目はIDで決まりなので2列目から取得する
+            var metaDataRange = $"{sheetName}B1:{limitColName}1"; // 1列目はIDで決まりなので2列目から取得する
             var values = sheetsService.Get(sheetID, metaDataRange);
 
-            var parameterNames = values[0]; // リストのリストになっているおり、0番目の要素が1行目を表している
+            var parameterNames = values[0]; // リストのリストになっており、0番目の要素が1行目を表している
             var parameterCount = parameterNames.Count; // 空欄は無視されるので、1行目の要素の数がそのままパラメータの数になる
             var colEdge = ColIdxToColName(parameterCount);
 
@@ -41,7 +53,7 @@ namespace GoogleDriveDownloader
             int rowIdx = 2;
             while (true)
             {
-                var range = $"A{rowIdx}:{colEdge}{rowIdx}";
+                var range = $"{sheetName}A{rowIdx}:{colEdge}{rowIdx}";
                 values = sheetsService.Get(sheetID, range);
 
                 // 空の行を読み込んだ場合はValuesがnullになるので、それで全ての行を読み込んだかどうか判定
@@ -57,7 +69,9 @@ namespace GoogleDriveDownloader
                 Dictionary<string, string> rowDic = new Dictionary<string, string>();
                 for (int i = 0; i < parameterCount; i++)
                 {
-                    rowDic.Add((string)parameterNames[i], (string)rowData[i + 1]); // rowDataはA列から始まっているので、1個ずらす必要がある
+                    // parameterNamesはB列から始まっているが、
+                    // rowDataはA列から始まっているので、1個ずらす必要がある
+                    rowDic.Add((string)parameterNames[i], (string)rowData[i + 1]);
                 }
 
                 retVal.SetRow(id, rowDic);
