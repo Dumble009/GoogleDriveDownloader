@@ -112,6 +112,12 @@ public class SheetExportFunctionTest
             {
                 File.Delete(filePath);
             }
+
+            var directoryPaths = Directory.GetDirectories(tempDirPath);
+            foreach (var directoryPath in directoryPaths)
+            {
+                Directory.Delete(directoryPath, true);
+            }
         }
         else
         {
@@ -206,18 +212,24 @@ public class SheetExportFunctionTest
     }
 
     /// <summary>
-    /// 一般的なデータを読み込んで、テキストとして一度だけエクスポートするテスト
+    /// テキスト形式でデータをエクスポートするよう指示し、
+    /// 正しい内容でエクスポートされているか確認するテスト
     /// </summary>
-    [Test]
-    public void LoadNormalDataAndExportAsTextOnceTest()
+    /// <param name="exportPath">
+    /// エクスポート先のルート以下の相対パス。
+    /// </param>
+    /// <param name="fileContent">
+    /// エクスポートするファイルに書き込むテキスト
+    /// </param>
+    private void TextExportBody(
+        string exportPath,
+        string fileContent
+    )
     {
-        // 読み込み対象のシートのメタデータの作成
-        const string RESULT_FILE_NAME = "LoadNormalDataAndExportAsTextOnceTestResult.txt";
-        var metaSheetData = CreateMetaSheetData(RESULT_FILE_NAME);
+        var metaSheetData = CreateMetaSheetData(exportPath); // 読み込み対象のシートのメタデータ
 
         // ファイルに書き込まれるデータの作成
-        const string RESULT_TEXT = "LoadNormalDataAndExportAsTextOnceTestResult";
-        var bytes = new List<byte>(Encoding.UTF8.GetBytes(RESULT_TEXT));
+        var bytes = new List<byte>(Encoding.UTF8.GetBytes(fileContent));
         mockSheetDataConverter.ConvertResult = bytes;
 
         // エクスポート操作が行われ、想定通りの振る舞いを行い、
@@ -225,7 +237,37 @@ public class SheetExportFunctionTest
         mockSheetExportUI.Export(metaSheetData);
 
         AssertPassedDatas(metaSheetData, sheetData);
-        AreEqualFileContentText(metaSheetData.SavePath, RESULT_TEXT);
+        AreEqualFileContentText(metaSheetData.SavePath, fileContent);
+    }
+
+    /// <summary>
+    /// 一般的なデータを読み込んで、テキストとして一度だけエクスポートするテスト
+    /// </summary>
+    [Test]
+    public void LoadNormalDataAndExportAsTextOnceTest()
+    {
+        TextExportBody(
+            "LoadNormalDataAndExportAsTextOnceTestResult.txt",
+            "LoadNormalDataAndExportAsTextOnceTestResult"
+        );
+    }
+
+    /// <summary>
+    /// エクスポート先のサブディレクトリ以下にファイルをエクスポートする事が出来るか確認するテスト
+    /// </summary>
+    [Test]
+    public void LoadNormalDataAndExportToSubDirectory()
+    {
+        TextExportBody(
+            "subdir/LoadNormalDataAndExportToSubDirectoryResult.txt",
+            "LoadNormalDataAndExportToSubDirectoryResult"
+        );
+
+        // 2階層以上下に作成する事は出来るか
+        TextExportBody(
+            "subdir/subsubdir/LoadNormalDataAndExportToSubDirectoryResult.txt",
+            "LoadNormalDataAndExportToSubDirectoryResult"
+        );
     }
 
     /// <summary>
@@ -258,7 +300,6 @@ public class SheetExportFunctionTest
         });
 
         // 書き込み対象のデータを更新する。
-        // そうでないと、上書き更新が行われたのか何も行われなかったのか判断がつかないため
         // また、すでに存在するファイルに書き込みが出来るか調べるために、書き込み先のパスは更新しない
         resultBytes = new List<byte>() { 4, 5, 6 };
         mockSheetDataConverter.ConvertResult = resultBytes;
@@ -280,4 +321,5 @@ public class SheetExportFunctionTest
         AssertPassedDatas(metaSheetData, sheetData);
         AreEqualFileContentBytes(metaSheetData.SavePath, resultBytes);
     }
+
 }
