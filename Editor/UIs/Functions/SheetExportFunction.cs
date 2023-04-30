@@ -84,6 +84,13 @@ namespace GoogleDriveDownloader
                 metaSheetData.SavePath
             );
 
+            // ディレクトリが無ければ作る必要がある
+            var directoryName = Path.GetDirectoryName(savePath);
+            if (!Directory.Exists(directoryName))
+            {
+                Directory.CreateDirectory(directoryName);
+            }
+
             File.WriteAllBytes(savePath, fileContent.ToArray()); // WriteAllBytesはファイルがあれば上書きし、なければ作って書く
         }
     }
