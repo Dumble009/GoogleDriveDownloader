@@ -9,3 +9,6 @@ Designs/*.drawio.bkp.meta
 
 Tests/Temp
 Tests/Temp.meta
+
+Config/Config.json
+Config/Config.json.meta
