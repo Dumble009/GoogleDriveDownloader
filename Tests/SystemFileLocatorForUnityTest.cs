@@ -50,7 +50,7 @@ public class SystemFileLocatorForUnityTest
     [Test]
     public void GetConfigFolderPathTest()
     {
-        PathCompareTestBody("Cofig", target.GetConfigFolderPath());
+        PathCompareTestBody("Config", target.GetConfigFolderPath());
     }
 
     /// <summary>
