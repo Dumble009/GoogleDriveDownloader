@@ -12,19 +12,18 @@ namespace GoogleDriveDownloader
     public class GoogleAuthAgent
     {
         /// <summary>
-        /// このファイルからクレデンシャルファイルまでの相対パス
+        /// 認証情報ファイルのファイル名
         /// </summary>
-        private const string RELATIVE_PATH_TO_CREADENTIAL = "../../Credentials/credentials.json";
+        private const string CREDENTIAL_FILE_NAME = "credentials.json";
 
         /// <summary>
-        /// クレデンシャルファイルのパスを計算するために使用する、
-        /// このソースコードが格納されているパスを計算してくれるオブジェクト
+        /// 認証情報ファイルが保存されているフォルダのパスを返してくれるオブジェクト
         /// </summary>
-        ISourceCodeLocator sourceCodeLocator;
+        ISystemFileLocator systemFileLocator;
 
-        public GoogleAuthAgent(ISourceCodeLocator _sourceCodeLocator)
+        public GoogleAuthAgent(ISystemFileLocator _systemFileLocator)
         {
-            sourceCodeLocator = _sourceCodeLocator;
+            systemFileLocator = _systemFileLocator;
         }
 
         /// <summary>
@@ -62,13 +61,12 @@ namespace GoogleDriveDownloader
         )
         {
             // クレデンシャルファイルのパスを計算
-            var thisDirectoryPath = sourceCodeLocator
-                                    .GetDirectoryOfSourceCodePath();
-            var credentialPath = Path.Combine(thisDirectoryPath, RELATIVE_PATH_TO_CREADENTIAL);
+            var credentialDirPath = systemFileLocator.GetCredentialsFolderPath();
+            var credentialFilePath = Path.Combine(credentialDirPath, CREDENTIAL_FILE_NAME);
 
             // 認証情報をクレデンシャルファイルから読み込む
             using var fileStream = new FileStream(
-                credentialPath,
+                credentialFilePath,
                 FileMode.Open,
                 FileAccess.Read
             );
