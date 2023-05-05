@@ -17,7 +17,7 @@ namespace GoogleDriveDownloader
         public SpreadSheetsService()
         {
             sheetsService = new GoogleAuthAgent(
-                new SourceCodeLocator()
+                new SystemFileLocatorForUnity()
             )
             .CreateSheetsService();
         }

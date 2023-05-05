@@ -14,7 +14,7 @@ public class GoogleAuthAgentTest
     public void CreateSheetsServiceTest()
     {
         var sheetsService = new GoogleAuthAgent(
-            new SourceCodeLocator()
+            new SystemFileLocatorForUnity()
         )
         .CreateSheetsService();
 

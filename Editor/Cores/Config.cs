@@ -11,9 +11,9 @@ namespace GoogleDriveDownloader
     public class Config : IConfig
     {
         /// <summary>
-        /// このソースコードが置かれているパスからコンフィグファイルまでの相対パス
+        /// コンフィグファイルの名称
         /// </summary>
-        const string CONFIG_RELATIVE_PATH = "../../Config/Config.json";
+        const string CONFIG_FILE_NAME = "Config.json";
 
         /// <summary>
         /// コンフィグファイル内の、メタシートのIDを持つ値の名前
@@ -40,14 +40,14 @@ namespace GoogleDriveDownloader
         /// <summary>
         /// オブジェクトの作成と同時に、コンフィグファイルの読み込み、内容のパースを行う
         /// </summary>
-        /// <param name="sourceCodeLocator">
-        /// コンフィグファイルのパスを計算するために使用する、ソースコードのパスを返してくれるオブジェクト
+        /// <param name="systemFileLocator">
+        /// コンフィグファイルを格納するディレクトリのパスを返してくれるオブジェクト
         /// </param>
-        public Config(ISourceCodeLocator sourceCodeLocator)
+        public Config(ISystemFileLocator systemFileLocator)
         {
             string configFilePath = Path.Combine(
-                sourceCodeLocator.GetDirectoryOfSourceCodePath(),
-                CONFIG_RELATIVE_PATH
+                systemFileLocator.GetConfigFolderPath(),
+                CONFIG_FILE_NAME
             );
 
             using (StreamReader file = File.OpenText(configFilePath))

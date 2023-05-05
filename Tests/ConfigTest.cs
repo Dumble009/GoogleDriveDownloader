@@ -24,10 +24,9 @@ public class ConfigTest
             dirPathOfThisFile,
             DUMMY_CONFIG_RELATIVE_PATH
         );
-        var mockSourceCodeLocator = new MockSourceCodeLocator();
-        mockSourceCodeLocator.ReturnPath = dummyConFigPath;
+        var mockSystemFileLocator = new MockSystemFileLocator();
 
-        target = new Config(mockSourceCodeLocator);
+        target = new Config(mockSystemFileLocator);
     }
 
     /// <summary>

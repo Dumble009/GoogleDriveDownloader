@@ -127,8 +127,7 @@ namespace GoogleDriveDownloader
 
             retVal.SheetLoader = new SheetLoader(spreadSheetService);
 
-            var sourceCodeLocator = new SourceCodeLocator();
-            retVal.Config = new Config(sourceCodeLocator);
+            retVal.Config = new Config(new SystemFileLocatorForUnity());
             retVal.MetaSheetLoader = new MetaSheetLoader(
                 retVal.SheetLoader,
                 retVal.Config
