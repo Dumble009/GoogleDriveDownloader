@@ -8,7 +8,7 @@ namespace GoogleDriveDownloader
     /// </summary>
     public class MainWindow : EditorWindow
     {
-        /// <summary>
+        /*/// <summary>
         /// 画面を構成する全てのUI要素のリスト
         /// </summary>
         List<IUIElement> uis;
@@ -165,6 +165,6 @@ namespace GoogleDriveDownloader
             /// シートのエクスポート処理、及びメタシートの読み込みを行う際に必要
             /// </summary>
             public IConfig Config;
-        }
+        }*/
     }
 }
