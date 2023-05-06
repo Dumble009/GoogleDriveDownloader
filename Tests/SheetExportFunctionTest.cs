@@ -207,8 +207,21 @@ public class SheetExportFunctionTest
         SheetData sheetData
     )
     {
-        Assert.AreEqual(metaSheetData.SheetID, mockSheetLoader.PassedSheetID);
+        Assert.True(mockSheetLoader.IsThiSheetIDPassed(metaSheetData.SheetID));
         TestUtil.AssertAreEqualSheetData(sheetData, mockSheetDataConverter.PassedSheetData);
+    }
+
+    /// <summary>
+    /// mockSheetDataConverterがtargetに返すバイト列を
+    /// stringを元に作成して、Converterが返す値として設定する
+    /// </summary>
+    /// <param name="fileContent">
+    /// Converterがtargetに渡し、ファイルに書きこまれることが期待される値
+    /// </param>
+    private void SetConvertResultText(string fileContent)
+    {
+        var bytes = new List<byte>(Encoding.UTF8.GetBytes(fileContent));
+        mockSheetDataConverter.ConvertResult = bytes;
     }
 
     /// <summary>
@@ -228,9 +241,7 @@ public class SheetExportFunctionTest
     {
         var metaSheetData = CreateMetaSheetData(exportPath); // 読み込み対象のシートのメタデータ
 
-        // ファイルに書き込まれるデータの作成
-        var bytes = new List<byte>(Encoding.UTF8.GetBytes(fileContent));
-        mockSheetDataConverter.ConvertResult = bytes;
+        SetConvertResultText(fileContent);
 
         // エクスポート操作が行われ、想定通りの振る舞いを行い、
         // 想定通りの内容がファイルに出力されるかどうかを調べる
@@ -330,4 +341,42 @@ public class SheetExportFunctionTest
         AreEqualFileContentBytes(metaSheetData.SavePath, resultBytes);
     }
 
+    /// <summary>
+    /// 複数のMetaSheetDataをエクスポートさせるテスト
+    /// </summary>
+    [Test]
+    public void LoadMutipleDatasAndExportAsTextOnceTest()
+    {
+        // エクスポート対象の複数のMetaSheetDataの作成
+
+        var metaSheetDatas = new List<MetaSheetData>();
+
+        string[] fileNames = new string[] {
+            "LoadMultipleDatasAndExportAsTextOnce1.txt",
+            "LoadMultipleDatasAndExportAsTextOnce2.txt",
+            "LoadMultipleDatasAndExportAsTextOnce3.txt"
+        };
+
+        for (int i = 0; i < fileNames.Length; i++)
+        {
+            metaSheetDatas.Add(
+                CreateMetaSheetData(fileNames[i])
+            );
+        }
+
+        // いずれのメタシートに対しても、エクスポートされるテキストは同じ
+        const string FILE_CONTENT = "LoadMultipleDatasAndExportAsTextOnce";
+        SetConvertResultText(FILE_CONTENT);
+
+        mockSheetExportUI.Export(metaSheetDatas);
+
+        foreach (var metaSheetData in metaSheetDatas)
+        {
+            AssertPassedDatas(metaSheetData, sheetData);
+            AreEqualFileContentText(
+                metaSheetData.SavePath,
+                FILE_CONTENT
+            );
+        }
+    }
 }
