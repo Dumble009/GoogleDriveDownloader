@@ -15,7 +15,7 @@ namespace GoogleDriveDownloader
         /// <summary>
         /// メタシートのデータを渡す対象となるUIオブジェクトのリスト
         /// </summary>
-        List<ISheetListUI> sheetListUIs;
+        List<IMetaSheetDataReceiveUI> metaSheetDataReceivers;
 
         /// <summary>
         /// 自身がリロードイベントを購読しているUIオブジェクトのリスト
@@ -28,7 +28,7 @@ namespace GoogleDriveDownloader
         {
             metaSheetLoader = _metaSheetLoader;
 
-            sheetListUIs = new List<ISheetListUI>();
+            metaSheetDataReceivers = new List<IMetaSheetDataReceiveUI>();
             reloadUIs = new List<IReloadUI>();
         }
 
@@ -51,11 +51,11 @@ namespace GoogleDriveDownloader
 
                 // ISheetListUIを見つけた時、それが今まで無かったものであれば
                 // データを渡す先として追加する
-                if (ui is ISheetListUI sheetListUI)
+                if (ui is IMetaSheetDataReceiveUI receiver)
                 {
-                    if (!sheetListUIs.Contains(sheetListUI))
+                    if (!metaSheetDataReceivers.Contains(receiver))
                     {
-                        sheetListUIs.Add(sheetListUI);
+                        metaSheetDataReceivers.Add(receiver);
                     }
                 }
             }
@@ -67,7 +67,7 @@ namespace GoogleDriveDownloader
         private void OnReload()
         {
             var metaSheetDatas = metaSheetLoader.LoadMetaSheet();
-            foreach (var sheetListUI in sheetListUIs)
+            foreach (var sheetListUI in metaSheetDataReceivers)
             {
                 sheetListUI.UpdateList(metaSheetDatas);
             }

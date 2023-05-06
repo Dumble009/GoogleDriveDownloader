@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 
 namespace GoogleDriveDownloader
 {
@@ -5,10 +6,10 @@ namespace GoogleDriveDownloader
     /// <summary>
     /// シートのエクスポート操作が行われた時に呼び出されるイベントのデリゲート
     /// </summary>
-    /// <param name="data">
-    /// エクスポートしたいシートの情報を持ったMetaSheetData
+    /// <param name="datas">
+    /// エクスポートしたいシートの情報を持ったMetaSheetDataのリスト
     /// </param>
-    public delegate void OnExportSheetHandler(MetaSheetData data);
+    public delegate void OnExportSheetHandler(List<MetaSheetData> datas);
 
     /// <summary>
     /// 各シートのデータをエクスポートするイベントを提供するUIのインタフェース

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
@@ -84,7 +85,9 @@ namespace GoogleDriveDownloader
 
             if (GUILayout.Button(EXPORT_BUTTON_LABEL, GUILayout.Width(BUTTON_WIDTH)))
             {
-                onExportHandler(passedMetaSheetData);
+                onExportHandler(
+                    new List<MetaSheetData>() { passedMetaSheetData }
+                );
             }
 
             EditorGUILayout.Space();

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using GoogleDriveDownloader;
 
 /// <summary>
@@ -19,12 +20,12 @@ public class MockSheetExportUI : ISheetExportUI, IUIElement
     /// <summary>
     /// エクスポート操作を行った際のイベントを発行する
     /// </summary>
-    /// <param name="metaSheetData">
+    /// <param name="metaSheetDatas">
     /// エクスポート対象のシートについてのデータ
     /// </param>
-    public void Export(MetaSheetData metaSheetData)
+    public void Export(List<MetaSheetData> metaSheetDatas)
     {
-        handler(metaSheetData);
+        handler(metaSheetDatas);
     }
 
     public void Draw()

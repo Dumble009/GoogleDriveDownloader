@@ -5,7 +5,7 @@ namespace GoogleDriveDownloader
     /// <summary>
     /// メタシートから取得したシートデータを一覧表示するUIが実装するインタフェース
     /// </summary>
-    public interface ISheetListUI
+    public interface IMetaSheetDataReceiveUI
     {
         /// <summary>
         /// 一覧表示する情報を更新する。

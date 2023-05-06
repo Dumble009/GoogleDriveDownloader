@@ -7,7 +7,7 @@ namespace GoogleDriveDownloader
     /// <summary>
     /// ドライブ上のシートを一覧表示するUI
     /// </summary>
-    public class SheetList : IUIElement, ISheetListUI, ISheetExportUI
+    public class SheetList : IUIElement, IMetaSheetDataReceiveUI, ISheetExportUI
     {
         /// <summary>
         /// 一覧表示を構成する各アイテム
