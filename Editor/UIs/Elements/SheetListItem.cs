@@ -19,6 +19,11 @@ namespace GoogleDriveDownloader
         const string EXPORT_PATH_LABEL_TEMPLATE = "Export to : {0}";
 
         /// <summary>
+        /// エクスポートボタンの横幅
+        /// </summary>
+        const int BUTTON_WIDTH = 100;
+
+        /// <summary>
         /// 現在折り畳みを展開しているかどうか。trueなら展開して中身を表示している
         /// </summary>
         bool isShown = false;
@@ -34,6 +39,12 @@ namespace GoogleDriveDownloader
         OnExportSheetHandler onExportHandler;
 
         /// <summary>
+        /// 各シートの名称ラベルの、フォントサイズ等のスタイル
+        /// 全てのアイテムで共通のスタイルを使用するので、静的オブジェクトにして生成、破棄のコストを抑える
+        /// </summary>
+        static GUIStyle displayNameStyle;
+
+        /// <summary>
         /// シートデータを渡し、その中身を用いてオブジェクトを初期化する
         /// </summary>
         /// <param name="metaSheetData">
@@ -44,6 +55,17 @@ namespace GoogleDriveDownloader
             passedMetaSheetData = metaSheetData;
 
             onExportHandler += (_) => { }; // 空関数で初期化しておくことでnull参照を防ぐ
+
+            // displayNameStyleは静的オブジェクトなので、他のオブジェクトが作成していれば再作成する必要は無い
+            if (displayNameStyle == null)
+            {
+                displayNameStyle = new GUIStyle();
+                displayNameStyle.fontStyle = FontStyle.Bold;
+
+                var styleState = new GUIStyleState();
+                styleState.textColor = Color.white;
+                displayNameStyle.normal = styleState;
+            }
         }
 
         /// <summary>
@@ -51,10 +73,7 @@ namespace GoogleDriveDownloader
         /// </summary>
         public void Draw()
         {
-            isShown = EditorGUILayout.BeginFoldoutHeaderGroup(
-                isShown,
-                passedMetaSheetData.DisplayName
-            );
+            GUILayout.Label(passedMetaSheetData.DisplayName, displayNameStyle);
 
             GUILayout.Label(
                 string.Format(
@@ -63,12 +82,14 @@ namespace GoogleDriveDownloader
                 )
             );
 
-            if (GUILayout.Button(EXPORT_BUTTON_LABEL))
+            if (GUILayout.Button(EXPORT_BUTTON_LABEL, GUILayout.Width(BUTTON_WIDTH)))
             {
                 onExportHandler(passedMetaSheetData);
             }
 
-            EditorGUILayout.EndFoldoutHeaderGroup();
+            EditorGUILayout.Space();
+            SeparateLine.Draw();
+            EditorGUILayout.Space();
         }
 
         /// <summary>

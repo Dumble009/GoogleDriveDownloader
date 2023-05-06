@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 
 namespace GoogleDriveDownloader
 {
@@ -13,6 +14,11 @@ namespace GoogleDriveDownloader
         const string RELOAD_BUTTON_LABEL = "Reload";
 
         /// <summary>
+        /// リロードボタンの横幅
+        /// </summary>
+        const int BUTTON_WIDTH = 100;
+
+        /// <summary>
         /// リロードイベントに対するイベントハンドラ
         /// </summary>
         OnMetaSheetReloadHandler onReloadHandler;
@@ -24,10 +30,14 @@ namespace GoogleDriveDownloader
 
         public void Draw()
         {
-            if (GUILayout.Button(RELOAD_BUTTON_LABEL))
+            if (GUILayout.Button(RELOAD_BUTTON_LABEL, GUILayout.Width(BUTTON_WIDTH)))
             {
                 onReloadHandler();
             }
+
+            EditorGUILayout.Space();
+            SeparateLine.Draw();
+            EditorGUILayout.Space();
         }
 
         public void RegisterOnMetaSheetReload(OnMetaSheetReloadHandler _handler)
