@@ -243,14 +243,14 @@ public class SheetExportFunctionTest
     }
 
     /// <summary>
-    /// 一般的なデータを読み込んで、テキストとして一度だけエクスポートするテスト
+    /// 一つのデータを読み込んで、テキストとして一度だけエクスポートするテスト
     /// </summary>
     [Test]
-    public void LoadNormalDataAndExportAsTextOnceTest()
+    public void LoadSingleDataAndExportAsTextOnceTest()
     {
         TextExportBody(
-            "LoadNormalDataAndExportAsTextOnceTestResult.txt",
-            "LoadNormalDataAndExportAsTextOnceTestResult"
+            "LoadSingleDataAndExportAsTextOnceTestResult.txt",
+            "LoadSingleDataAndExportAsTextOnceTestResult"
         );
     }
 
@@ -258,17 +258,17 @@ public class SheetExportFunctionTest
     /// エクスポート先のサブディレクトリ以下にファイルをエクスポートする事が出来るか確認するテスト
     /// </summary>
     [Test]
-    public void LoadNormalDataAndExportToSubDirectory()
+    public void LoadSingleDataAndExportToSubDirectory()
     {
         TextExportBody(
-            "subdir/LoadNormalDataAndExportToSubDirectoryResult.txt",
-            "LoadNormalDataAndExportToSubDirectoryResult"
+            "subdir/LoadSingleDataAndExportToSubDirectoryResult.txt",
+            "LoadSingleDataAndExportToSubDirectoryResult"
         );
 
         // 2階層以上下に作成する事は出来るか
         TextExportBody(
-            "subdir/subsubdir/LoadNormalDataAndExportToSubDirectoryResult.txt",
-            "LoadNormalDataAndExportToSubDirectoryResult"
+            "subdir/subsubdir/LoadSingleDataAndExportToSubDirectoryResult.txt",
+            "LoadSingleDataAndExportToSubDirectoryResult"
         );
     }
 
@@ -277,10 +277,10 @@ public class SheetExportFunctionTest
     /// また、エクスポートとエクスポートの間にUIの追加を行い、それに正しく対応できるか調べる
     /// </summary>
     [Test]
-    public void LoadNormalDataAndExportAsBytesMultipleWithMultiUITest()
+    public void LoadSingleDataAndExportAsBytesMultipleWithMultiUITest()
     {
         // 読み込み対象のシートのメタデータの作成
-        const string RESULT_FILE_NAME = "LoadNormalDataAndExportAsBytesMultipleWithMultiUITestResult";
+        const string RESULT_FILE_NAME = "LoadSingleDataAndExportAsBytesMultipleWithMultiUITestResult";
         var metaSheetData = CreateMetaSheetData(RESULT_FILE_NAME);
 
         // ファイルに書き込まれるデータの作成
