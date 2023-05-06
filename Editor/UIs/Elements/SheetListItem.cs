@@ -19,6 +19,11 @@ namespace GoogleDriveDownloader
         const string EXPORT_PATH_LABEL_TEMPLATE = "Export to : {0}";
 
         /// <summary>
+        /// エクスポートボタンの横幅
+        /// </summary>
+        const int BUTTON_WIDTH = 100;
+
+        /// <summary>
         /// 現在折り畳みを展開しているかどうか。trueなら展開して中身を表示している
         /// </summary>
         bool isShown = false;
@@ -63,7 +68,7 @@ namespace GoogleDriveDownloader
                 )
             );
 
-            if (GUILayout.Button(EXPORT_BUTTON_LABEL))
+            if (GUILayout.Button(EXPORT_BUTTON_LABEL, GUILayout.Width(BUTTON_WIDTH)))
             {
                 onExportHandler(passedMetaSheetData);
             }
