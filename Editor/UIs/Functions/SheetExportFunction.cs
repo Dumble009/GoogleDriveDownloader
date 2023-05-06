@@ -71,30 +71,33 @@ namespace GoogleDriveDownloader
         /// <summary>
         /// シートのエクスポート操作が行われた際に呼び出される処理
         /// </summary>
-        /// <param name="metaSheetData">
-        /// エクスポートしたいシートのメタデータ
+        /// <param name="metaSheetDatas">
+        /// エクスポートしたいシートのメタデータのリスト
         /// </param>
-        private void OnExport(MetaSheetData metaSheetData)
+        private void OnExport(List<MetaSheetData> metaSheetDatas)
         {
-            var sheetData = sheetLoader.LoadSheetData(
-                metaSheetData.SheetID,
-                metaSheetData.SheetName
-            );
-            var fileContent = converter.Convert(sheetData);
-
-            var savePath = Path.Combine(
-                config.GetExportRootPath(),
-                metaSheetData.SavePath
-            );
-
-            // ディレクトリが無ければ作る必要がある
-            var directoryName = Path.GetDirectoryName(savePath);
-            if (!Directory.Exists(directoryName))
+            foreach (var metaSheetData in metaSheetDatas)
             {
-                Directory.CreateDirectory(directoryName);
-            }
+                var sheetData = sheetLoader.LoadSheetData(
+                    metaSheetData.SheetID,
+                    metaSheetData.SheetName
+                );
+                var fileContent = converter.Convert(sheetData);
 
-            File.WriteAllBytes(savePath, fileContent.ToArray()); // WriteAllBytesはファイルがあれば上書きし、なければ作って書く
+                var savePath = Path.Combine(
+                    config.GetExportRootPath(),
+                    metaSheetData.SavePath
+                );
+
+                // ディレクトリが無ければ作る必要がある
+                var directoryName = Path.GetDirectoryName(savePath);
+                if (!Directory.Exists(directoryName))
+                {
+                    Directory.CreateDirectory(directoryName);
+                }
+
+                File.WriteAllBytes(savePath, fileContent.ToArray()); // WriteAllBytesはファイルがあれば上書きし、なければ作って書く
+            }
         }
     }
 }

@@ -234,7 +234,9 @@ public class SheetExportFunctionTest
 
         // エクスポート操作が行われ、想定通りの振る舞いを行い、
         // 想定通りの内容がファイルに出力されるかどうかを調べる
-        mockSheetExportUI.Export(metaSheetData);
+        mockSheetExportUI.Export(
+            new List<MetaSheetData>() { metaSheetData }
+        );
 
         AssertPassedDatas(metaSheetData, sheetData);
         AreEqualFileContentText(metaSheetData.SavePath, fileContent);
@@ -286,7 +288,9 @@ public class SheetExportFunctionTest
         mockSheetDataConverter.ConvertResult = resultBytes;
 
         // 1回目のエクスポート操作
-        mockSheetExportUI.Export(metaSheetData);
+        mockSheetExportUI.Export(
+            new List<MetaSheetData>() { metaSheetData }
+        );
 
         AssertPassedDatas(metaSheetData, sheetData);
         AreEqualFileContentBytes(metaSheetData.SavePath, resultBytes);
@@ -305,7 +309,9 @@ public class SheetExportFunctionTest
         mockSheetDataConverter.ConvertResult = resultBytes;
 
         // 2回目のエクスポート操作
-        sheetExportUI2.Export(metaSheetData);
+        sheetExportUI2.Export(
+            new List<MetaSheetData>() { metaSheetData }
+        );
 
         AssertPassedDatas(metaSheetData, sheetData);
         AreEqualFileContentBytes(metaSheetData.SavePath, resultBytes);
@@ -316,7 +322,9 @@ public class SheetExportFunctionTest
         mockSheetDataConverter.ConvertResult = resultBytes;
 
         // 3回目のエクスポート操作
-        mockSheetExportUI.Export(metaSheetData);
+        mockSheetExportUI.Export(
+            new List<MetaSheetData>() { metaSheetData }
+        );
 
         AssertPassedDatas(metaSheetData, sheetData);
         AreEqualFileContentBytes(metaSheetData.SavePath, resultBytes);
