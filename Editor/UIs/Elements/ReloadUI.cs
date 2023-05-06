@@ -36,6 +36,8 @@ namespace GoogleDriveDownloader
             }
 
             EditorGUILayout.Space();
+            SeparateLine.Draw();
+            EditorGUILayout.Space();
         }
 
         public void RegisterOnMetaSheetReload(OnMetaSheetReloadHandler _handler)

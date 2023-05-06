@@ -88,6 +88,8 @@ namespace GoogleDriveDownloader
             }
 
             EditorGUILayout.Space();
+            SeparateLine.Draw();
+            EditorGUILayout.Space();
         }
 
         /// <summary>
