@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 
 namespace GoogleDriveDownloader
 {
@@ -33,6 +34,8 @@ namespace GoogleDriveDownloader
             {
                 onReloadHandler();
             }
+
+            EditorGUILayout.Space();
         }
 
         public void RegisterOnMetaSheetReload(OnMetaSheetReloadHandler _handler)

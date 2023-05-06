@@ -86,6 +86,8 @@ namespace GoogleDriveDownloader
             {
                 onExportHandler(passedMetaSheetData);
             }
+
+            EditorGUILayout.Space();
         }
 
         /// <summary>
