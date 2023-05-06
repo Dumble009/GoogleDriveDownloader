@@ -39,6 +39,12 @@ namespace GoogleDriveDownloader
         OnExportSheetHandler onExportHandler;
 
         /// <summary>
+        /// 各シートの名称ラベルの、フォントサイズ等のスタイル
+        /// 全てのアイテムで共通のスタイルを使用するので、静的オブジェクトにして生成、破棄のコストを抑える
+        /// </summary>
+        static GUIStyle displayNameStyle;
+
+        /// <summary>
         /// シートデータを渡し、その中身を用いてオブジェクトを初期化する
         /// </summary>
         /// <param name="metaSheetData">
@@ -49,6 +55,17 @@ namespace GoogleDriveDownloader
             passedMetaSheetData = metaSheetData;
 
             onExportHandler += (_) => { }; // 空関数で初期化しておくことでnull参照を防ぐ
+
+            // displayNameStyleは静的オブジェクトなので、他のオブジェクトが作成していれば再作成する必要は無い
+            if (displayNameStyle == null)
+            {
+                displayNameStyle = new GUIStyle();
+                displayNameStyle.fontStyle = FontStyle.Bold;
+
+                var styleState = new GUIStyleState();
+                styleState.textColor = Color.white;
+                displayNameStyle.normal = styleState;
+            }
         }
 
         /// <summary>
@@ -56,10 +73,7 @@ namespace GoogleDriveDownloader
         /// </summary>
         public void Draw()
         {
-            isShown = EditorGUILayout.BeginFoldoutHeaderGroup(
-                isShown,
-                passedMetaSheetData.DisplayName
-            );
+            GUILayout.Label(passedMetaSheetData.DisplayName, displayNameStyle);
 
             GUILayout.Label(
                 string.Format(
@@ -72,8 +86,6 @@ namespace GoogleDriveDownloader
             {
                 onExportHandler(passedMetaSheetData);
             }
-
-            EditorGUILayout.EndFoldoutHeaderGroup();
         }
 
         /// <summary>
