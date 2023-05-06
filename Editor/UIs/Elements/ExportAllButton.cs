@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using GoogleDriveDownloader;
+using UnityEditor;
 
 namespace GoogleDriveDownloader
 {
@@ -37,6 +37,9 @@ namespace GoogleDriveDownloader
 
         public void Draw()
         {
+            EditorGUILayout.Space();
+            SeparateLine.Draw();
+
             if (
                 GUILayout.Button(
                     BUTTON_LABEL,
