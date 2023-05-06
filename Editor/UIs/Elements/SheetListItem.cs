@@ -25,11 +25,6 @@ namespace GoogleDriveDownloader
         const int BUTTON_WIDTH = 100;
 
         /// <summary>
-        /// 現在折り畳みを展開しているかどうか。trueなら展開して中身を表示している
-        /// </summary>
-        bool isShown = false;
-
-        /// <summary>
         /// このオブジェクトが対象とするシートのメタデータ
         /// </summary>
         MetaSheetData passedMetaSheetData;
