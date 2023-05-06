@@ -50,6 +50,15 @@ namespace GoogleDriveDownloader
             uiFunctions = CreateUIFunctions(coreObjects, uis);
 
             uiDrawer = new UIDrawer(uis);
+
+            foreach (var function in uiFunctions)
+            {
+                if (function is LoadMetaSheetDataFunction loadFunction)
+                {
+                    loadFunction.ForceLoad();
+                    break;
+                }
+            }
         }
 
         private void OnGUI()
