@@ -73,6 +73,7 @@ namespace GoogleDriveDownloader
 
             retVal.Add(new ReloadUI());
             retVal.Add(new SheetList());
+            retVal.Add(new ExportAllButton());
 
             return retVal;
         }
